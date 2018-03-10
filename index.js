@@ -8,7 +8,7 @@ const app = express();
 
 app.get('/', (req, res) => {
     res.send({
-        hi: 'world'
+        hi: 'test'
     });
 });
 
