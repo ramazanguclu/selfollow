@@ -13,14 +13,28 @@ class Header extends Component {
 
     render() {
         return (
-            <nav className="teal lighten-2">
-                <div className="nav-wrapper">
-                    <Link to={'/'} className="brand-logo right">Logo</Link>
-                    <ul id="nav-mobile" className="left hide-on-med-and-down">
-                        {this.renderContent()}
-                    </ul>
-                </div>
-            </nav>
+            <div>
+                <ul id="dropdown1" className="dropdown-content">
+                    <li><a href="#!">one</a></li>
+                    <li><a href="#!">two</a></li>
+                    <li className="divider"></li>
+                    <li><a href="#!">three</a></li>
+                </ul>
+                <nav className="teal lighten-2">
+                    <div className="nav-wrapper">
+                        <Link to={'/'} className="brand-logo right">Selfollow</Link>
+                        <ul id="nav-mobile" className="left hide-on-med-and-down">
+                            {this.renderContent()}
+                            <li>
+                                <a className="dropdown-trigger" href="#!" data-target="dropdown1">
+                                    Dropdown
+                                    <i className="material-icons right">arrow_drop_down</i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
         );
     };
 };
