@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as actions from '../actions';
 
 import Header from './Header';
+import Main from './Main';
 
 class App extends Component {
     componentDidMount() {
@@ -13,9 +14,12 @@ class App extends Component {
     render() {
         return (
             <div className="container">
-                <div>
-                    <Header />
-                </div>
+                <BrowserRouter>
+                    <div>
+                        <Header />
+                        <Route exact path="/" component={Main} />
+                    </div>
+                </BrowserRouter>
             </div>
         )
     }
