@@ -50,7 +50,7 @@ module.exports = (app) => {
         }
     });
 
-    app.get('/api/dictionary/words/:groupName/:groupId', requireLogin,async (req, res) => {        
+    app.get('/api/dictionary/words/:groupName/:groupId', requireLogin, async (req, res) => {        
         const words = await Word.find({ _user: req.user.id, _group: req.params.groupId }).select({
             __v: false
         });
