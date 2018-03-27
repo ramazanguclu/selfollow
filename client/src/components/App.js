@@ -5,7 +5,7 @@ import * as actions from '../actions';
 
 import Header from './Header';
 import Main from './Main';
-import Dictionary from './Dictionary';
+import Dictionary from './dictionary/Dictionary';
 
 class App extends Component {
     componentDidMount() {

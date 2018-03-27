@@ -18,6 +18,7 @@ mongoose.connect(keys.mongoURI);
 const app = express();
 
 //body parser for post or put methods
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Dropdown, Navbar } from 'react-materialize';
+import { Navbar } from 'react-materialize';
 import '../style/custom.css';
 
 class Header extends Component {

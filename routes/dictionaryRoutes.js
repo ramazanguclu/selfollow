@@ -6,7 +6,7 @@ const Word = mongoose.model('words');
 module.exports = (app) => {
     app.post('/api/dictionary/groups', requireLogin, async (req, res) => {
         const { name } = req.body;
-
+ 
         const wordGroup = new WordGroup({
             name,
             dateSent: Date.now(),
@@ -15,7 +15,7 @@ module.exports = (app) => {
 
         try {
             await wordGroup.save();
-            res.send({ status: 'success' });
+            res.send(req.user);
         } catch (err) {
             res.status(422).send(err);
         }
@@ -50,11 +50,11 @@ module.exports = (app) => {
         }
     });
 
-    app.get('/api/dictionary/words/:groupName/:groupId', requireLogin, async (req, res) => {        
+    app.get('/api/dictionary/words/:groupName/:groupId', requireLogin, async (req, res) => {
         const words = await Word.find({ _user: req.user.id, _group: req.params.groupId }).select({
             __v: false
         });
-        
+
         res.send(words);
     });
 }
