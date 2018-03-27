@@ -10,10 +10,12 @@ class Dictionary extends Component {
                 <div className="divider"></div>
                 <div className="section">
                     <form className="row">
-                        <input className="col s12" type="text"></input>
-                        <button className="col green btn-floating btn-large right white-text">
-                            <i className="material-icons large right">add</i>
-                        </button>
+                        <input className="col s8" type="text" placeholder="Add New Word Group"></input>
+                        <div className="col s4">
+                            <button className="green btn-floating btn-large right white-text">
+                                <i className="material-icons large right">add</i>
+                            </button>
+                        </div>
                     </form>
                 </div>
                 <div className="divider"></div>
