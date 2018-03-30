@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as actions from '../../actions';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 class WordGroupList extends Component {
     componentDidMount() {
@@ -12,7 +13,7 @@ class WordGroupList extends Component {
             return (
                 <li key={group._id} className="collection-item">
                     <div>
-                        <a href="#!">{group.name}</a>
+                        <Link to={'dictionary/words/' + group.name + '/' + group._id}>{group.name}</Link>
                         <a href="#!" className="secondary-content">
                             <i className="material-icons">delete</i>
                         </a>

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_USER, FETCH_WORD_GROUPS } from './types';
+import { FETCH_USER, FETCH_WORD_GROUPS, FETCH_DICTIONARY_WORDS } from './types';
 
 export const fetchUser = () => async (dispatch) => {
     const res = await axios.get('/api/current_user');
@@ -16,7 +16,7 @@ export const submitWordGroup = (values, history) => async (dispatch) => {
     history.push('/dictionary');
 
     dispatch({
-        type: FETCH_USER,
+        type: FETCH_WORD_GROUPS,
         payload: res.data
     });
 }
@@ -26,6 +26,15 @@ export const fetchWordGroups = () => async (dispatch) => {
 
     dispatch({
         type: FETCH_WORD_GROUPS,
+        payload: res.data
+    });
+}
+
+export const fetchDictionaryWords = (groupName, groupId) => async (dispatch) => {
+    const res = await axios.get('/api/dictionary/words/' + groupName + '/' + '/' + groupId);
+
+    dispatch({
+        type: FETCH_DICTIONARY_WORDS,
         payload: res.data
     });
 }

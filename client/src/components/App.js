@@ -6,6 +6,7 @@ import * as actions from '../actions';
 import Header from './Header';
 import Main from './Main';
 import Dictionary from './dictionary/Dictionary';
+import DictionaryWords from './dictionary/DictionaryWords';
 
 class App extends Component {
     componentDidMount() {
@@ -19,7 +20,8 @@ class App extends Component {
                     <div>
                         <Header />
                         <Route exact path="/" component={Main} />
-                        <Route exact path="/dictionary" component={Dictionary}/>
+                        <Route exact path="/dictionary" component={Dictionary} />
+                        <Route exact path="/dictionary/words/:groupName/:groupId" component={DictionaryWords} />
                     </div>
                 </BrowserRouter>
             </div>

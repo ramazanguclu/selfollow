@@ -15,7 +15,12 @@ module.exports = (app) => {
 
         try {
             await wordGroup.save();
-            res.send(req.user);
+
+            const groupsRes = await WordGroup.find({ _user: req.user.id }).select({
+                __v: false
+            });
+
+            res.send(groupsRes);
         } catch (err) {
             res.status(422).send(err);
         }
