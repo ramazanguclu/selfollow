@@ -19,7 +19,7 @@ class Header extends Component {
                 <Navbar className="teal lighten-2">
                     <Link to={'/'} className="brand-logo right">Selfollow</Link>
                     {this.renderContent()}
-                    <li><Link to={'/dictionary'}>Dictionary</Link></li>
+                    <li><Link to={this.props.auth ? '/dictionary' : '/'}>Dictionary</Link></li>
                 </Navbar>
             </div>
         );
