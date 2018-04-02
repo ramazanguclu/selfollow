@@ -31,7 +31,7 @@ export const fetchWordGroups = () => async (dispatch) => {
 }
 
 export const fetchDictionaryWords = (groupName, groupId) => async (dispatch) => {
-    const res = await axios.get('/api/dictionary/words/' + groupName + '/' + '/' + groupId);
+    const res = await axios.get('/api/dictionary/words/' + groupName + '/' + groupId);
 
     dispatch({
         type: FETCH_DICTIONARY_WORDS,
