@@ -31,7 +31,7 @@ class AddGroupName extends Component {
                             e.preventDefault();
                         }}
                         type="submit"
-                        className="green btn-floating btn-large right white-text"
+                        className="teal btn-floating btn-large right white-text"
                     >
                         <i className="material-icons large right">add</i>
                     </button>

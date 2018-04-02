@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
+import { Link } from 'react-router-dom';
 
 class DictionaryWords extends Component {
+    constructor(props) {
+        super(props);
+        this.groupName = this.props.match.params.groupName;
+        this.groupId = this.props.match.params.groupId;
+    }
+
     componentDidMount() {
-        this.props.fetchDictionaryWords(this.props.match.params.groupName, this.props.match.params.groupId);
+        this.props.fetchDictionaryWords(this.groupName, this.groupId);
     }
 
     renderWords() {
@@ -34,6 +41,13 @@ class DictionaryWords extends Component {
         return (
             <div>
                 {this.renderWords()}
+                <div className="fixed-action-btn">
+                    <Link
+                        to={'/dictionary/words/' + this.groupName + '/' + this.groupId + '/new'} className="btn-floating btn-large teal"
+                    >
+                        <i className="large material-icons">add</i>
+                    </Link>
+                </div>
             </div>
         )
     }
