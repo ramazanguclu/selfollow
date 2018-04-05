@@ -1,10 +1,10 @@
 import React from 'react';
 
-export default ({ input, label }) => {
+export default ({ inputName, label, inputType, inputValue }) => {
     return (
         <div>
-            <label>{label}</label>
-            <input {...input} />
+            {inputType !== 'hidden' ? <label>{label}</label> : ''}
+            <input type={inputType} name={inputName} value={inputValue} />
         </div>
     )
 };

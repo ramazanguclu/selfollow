@@ -1,7 +1,7 @@
 export default [
-    { label: 'word', name: 'word' },
-    { label: 'Synonym Words', name: 'synonym' },
-    { label: 'Description', name: 'description' },
-    { label: 'Example Sentence', name: 'example' },
-    { label: 'group_id', name: '_group' }
+    { label: 'word', name: 'word', type: 'text' },
+    { label: 'Synonym Words', name: 'synonym', type: 'text' },
+    { label: 'Description', name: 'description', type: 'text' },
+    { label: 'Example Sentence', name: 'example', type: 'text' },
+    { label: 'group_id', name: '_group', type: 'hidden' }
 ];

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
 import _ from 'lodash';
+import * as actions from '../../../actions';
+import { connect } from 'react-redux';
 
 import WordField from './WordField';
 import formFields from './formFields';
@@ -13,27 +14,26 @@ class WordNew extends Component {
     }
 
     renderFields() {
-        return _.map(formFields, ({ name, label }) => {
-            return <Field
-                type="text"
-                key={name}
-                label={label}
-                component={WordField}
-                name={name}
-            />
+        return _.map(formFields, ({ name, label, type }) => {
+            return <WordField key={name} label={label} inputName={name} inputType={type} inputValue={name === '_group' ? this.groupId : ''} />
         });
     }
 
     render() {
         return (
             <div>
-                <h1>{this.groupName}</h1>
-                {this.renderFields()}
+                <form>
+                    <h1>{this.groupName}</h1>
+                    {this.renderFields()}
+
+                    <button type="submit" className="teal btn-flat right white-text">
+                        ADD
+                        <i className="material-icons right">done</i>
+                    </button>
+                </form>
             </div>
         )
     }
 }
 
-export default reduxForm({
-    form: 'WordNew'
-})(WordNew);
+export default connect(null, actions)(WordNew);

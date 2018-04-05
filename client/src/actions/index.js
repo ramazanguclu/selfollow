@@ -38,3 +38,7 @@ export const fetchDictionaryWords = (groupName, groupId) => async (dispatch) => 
         payload: res.data
     });
 }
+
+export const submitDictionaryWord = (word) => async (dispatch) => {
+    console.log(word);
+}
