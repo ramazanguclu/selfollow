@@ -39,6 +39,6 @@ export const fetchDictionaryWords = (groupName, groupId) => async (dispatch) => 
     });
 }
 
-export const submitDictionaryWord = (word) => async (dispatch) => {
+export const submitDictionaryWord = (word, history) => async (dispatch) => {
     console.log(word);
 }

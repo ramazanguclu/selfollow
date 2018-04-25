@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 import authReducer from './authReducer';
 import wordGroupReducer from './wordGroupReducer';
-import dictionaryWords from './dictionaryWordsReducer';
+import dictionaryWordsReducer from './dictionaryWordsReducer';
+import { reducer as reduxForm } from 'redux-form';
 
 export default combineReducers({
     auth: authReducer,
     wordGroup: wordGroupReducer,
-    dictionaryWords: dictionaryWords
+    dictionaryWords: dictionaryWordsReducer,
+    form: reduxForm
 });

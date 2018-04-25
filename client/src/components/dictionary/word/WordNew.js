@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
-import * as actions from '../../../actions';
-import { connect } from 'react-redux';
+import { reduxForm } from 'redux-form';
 
 import WordField from './WordField';
 import formFields from './formFields';
+import WordForm from './WordForm';
+import WordFormReview from './WordFormPreview';
 
 class WordNew extends Component {
     constructor(props) {
@@ -13,27 +13,25 @@ class WordNew extends Component {
         this.groupId = this.props.match.params.groupId;
     }
 
-    renderFields() {
-        return _.map(formFields, ({ name, label, type }) => {
-            return <WordField key={name} label={label} inputName={name} inputType={type} inputValue={name === '_group' ? this.groupId : ''} />
-        });
+    state = { showWordReview: false };
+
+    renderContent() {
+        if (this.state.showWordReview) {
+            return <WordFormReview onCancel={() => this.setState({ showWordReview: false })} />;
+        }
+
+        return <WordForm groupId={this.groupId} groupName={this.groupName} onWordSubmit={() => this.setState({ showWordReview: true })} />;
     }
 
     render() {
         return (
             <div>
-                <form>
-                    <h1>{this.groupName}</h1>
-                    {this.renderFields()}
-
-                    <button type="submit" className="teal btn-flat right white-text">
-                        ADD
-                        <i className="material-icons right">done</i>
-                    </button>
-                </form>
+                {this.renderContent()}
             </div>
         )
     }
 }
 
-export default connect(null, actions)(WordNew);
+export default reduxForm({
+    form: 'wordForm'
+})(WordNew);
