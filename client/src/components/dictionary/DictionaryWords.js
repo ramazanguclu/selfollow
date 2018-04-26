@@ -33,7 +33,7 @@ class DictionaryWords extends Component {
                                 <p>{v.example}</p>
                             </div>
                             <div className="card-action">
-                                <a href="#"><i className="material-icons">update</i></a>
+                                <Link to={'/dictionary/words/' + this.groupName + '/' + this.groupId + '/update/' + v._id}><i className="material-icons">update</i></Link>
                                 <a onClick={(e) => this.deleteWordItem(v._id, e)} href="#"><i className="material-icons">delete</i></a>
                             </div>
                         </div>

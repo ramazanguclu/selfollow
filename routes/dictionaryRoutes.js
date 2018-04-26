@@ -86,4 +86,15 @@ module.exports = (app) => {
             res.status(422).send(err);
         }
     });
+
+    //dictionary words update
+    app.post('/api/dictionary/words/update', requireLogin, async (req, res) => {
+        const { updateId, group_id } = req.body;
+
+        try {
+            //TO-DO
+        } catch (err) {
+            res.status(422).send(err);
+        }
+    });
 }
