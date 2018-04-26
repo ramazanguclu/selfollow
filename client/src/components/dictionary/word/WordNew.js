@@ -10,7 +10,7 @@ class WordNew extends Component {
     constructor(props) {
         super(props);
         this.groupName = this.props.match.params.groupName;
-        this.groupId = this.props.match.params.groupId;
+        this.groupId = this.props.match.params.group_id;
     }
 
     state = { showWordReview: false };

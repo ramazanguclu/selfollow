@@ -5,3 +5,4 @@ https://react-materialize.github.io/#/navbar
 https://medium.com/dailyjs/asynchronous-adventures-in-javascript-callbacks-39880f1b470e
 https://github.com/doctolib/react-form
 http://mongoosejs.com/docs/index.html
+https://redux-form.com/7.2.3/examples/fieldlevelvalidation/

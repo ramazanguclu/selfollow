@@ -8,14 +8,15 @@ import WordField from './WordField';
 
 class WordForm extends Component {
     renderFields() {
-        return _.map(formFields, ({ label, name, type }) => {
+        return _.map(formFields, ({ label, name, type, isRequired, error }) => {
+            let required = value => (isRequired && !value ? error : '');
+
             return <Field
                 name={name}
                 component={WordField}
                 key={name}
                 label={label}
-                type={type}
-                inputValue={name === '_group' ? this.props.groupId : ''}
+                validate={required}
             >
             </Field>
         });

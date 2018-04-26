@@ -6,8 +6,9 @@ import { Link } from 'react-router-dom';
 class DictionaryWords extends Component {
     constructor(props) {
         super(props);
+
         this.groupName = this.props.match.params.groupName;
-        this.groupId = this.props.match.params.groupId;
+        this.groupId = this.props.match.params.group_id;
     }
 
     componentDidMount() {
@@ -42,9 +43,7 @@ class DictionaryWords extends Component {
             <div>
                 {this.renderWords()}
                 <div className="fixed-action-btn">
-                    <Link
-                        to={'/dictionary/words/' + this.groupName + '/' + this.groupId + '/new'} className="btn-floating btn-large teal"
-                    >
+                    <Link to={'/dictionary/words/' + this.groupName + '/' + this.groupId + '/new'} className="btn-floating btn-large teal">
                         <i className="large material-icons">add</i>
                     </Link>
                 </div>

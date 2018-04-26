@@ -40,5 +40,12 @@ export const fetchDictionaryWords = (groupName, groupId) => async (dispatch) => 
 }
 
 export const submitDictionaryWord = (word, history) => async (dispatch) => {
-    console.log(word);
+    const res = await axios.post('/api/dictionary/words/new', word);
+
+    history.push('/dictionary/words/' + word.groupName + '/' + word.group_id);
+
+    dispatch({
+        type: FETCH_DICTIONARY_WORDS,
+        payload: res.data
+    });
 }

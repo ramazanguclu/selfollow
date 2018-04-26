@@ -22,8 +22,8 @@ class App extends Component {
                         <Header />
                         <Route exact path="/" component={Main} />
                         <Route exact path="/dictionary" component={Dictionary} />
-                        <Route exact path="/dictionary/words/:groupName/:groupId" component={DictionaryWords} />
-                        <Route exact path="/dictionary/words/:groupName/:groupId/new" component={WordNew} />
+                        <Route exact path="/dictionary/words/:groupName/:group_id" component={DictionaryWords} />
+                        <Route exact path="/dictionary/words/:groupName/:group_id/new" component={WordNew} />
                     </div>
                 </BrowserRouter>
             </div>

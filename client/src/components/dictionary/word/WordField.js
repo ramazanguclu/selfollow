@@ -1,10 +1,11 @@
 import React from 'react';
 
-export default ({ label, type, input, inputValue }) => {
+export default ({ label, type, input, inputValue, meta: { error, touched } }) => {
     return (
         <div>
-            <label style={{ 'visibility': type }}>{label}</label>
-            <input {...input} type={type} defaultValue={inputValue}/>
+            <div className="red-text">{touched && error}</div>
+            <label>{label}</label>
+            <input {...input} />
         </div>
     )
 };

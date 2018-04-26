@@ -6,13 +6,14 @@ import _ from 'lodash';
 
 import formFields from './formFields';
 
-const WordFormReview = (state, { formValues, onCancel, history, submitDictionaryWord, match }) => {
+const WordFormReview = ({ formValues, onCancel, history, submitDictionaryWord, match }) => {
     const reviewFields = _.map(formFields, ({ name, label, type }) => {
-        console.log(state)
+        formValues = Object.assign({}, formValues, match.params);
+
         return (
             <div key={name}>
                 <label>{label}</label>
-                <div></div>
+                <div>{formValues[name]}</div>
             </div>
         )
     });
