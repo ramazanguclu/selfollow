@@ -15,6 +15,11 @@ class DictionaryWords extends Component {
         this.props.fetchDictionaryWords(this.groupName, this.groupId);
     }
 
+    deleteWordItem(id, e) {
+        this.props.deleteDictionaryWord(id, this.groupId);
+        e.preventDefault();
+    }
+
     renderWords() {
         return this.props.dictionaryWords.reverse().map((v) => {
             return (
@@ -29,7 +34,7 @@ class DictionaryWords extends Component {
                             </div>
                             <div className="card-action">
                                 <a href="#"><i className="material-icons">update</i></a>
-                                <a href="#"><i className="material-icons">delete</i></a>
+                                <a onClick={(e) => this.deleteWordItem(v._id, e)} href="#"><i className="material-icons">delete</i></a>
                             </div>
                         </div>
                     </div>

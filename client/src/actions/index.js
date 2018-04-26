@@ -49,3 +49,13 @@ export const submitDictionaryWord = (word, history) => async (dispatch) => {
         payload: res.data
     });
 }
+
+export const deleteDictionaryWord = (deleteId, group_id) => async (dispatch) => {
+
+    const res = await axios.post('/api/dictionary/words/delete', { deleteId, group_id });
+
+    dispatch({
+        type: FETCH_DICTIONARY_WORDS,
+        payload: res.data
+    })
+}
