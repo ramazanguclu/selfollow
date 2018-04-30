@@ -1,12 +1,34 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import _ from 'lodash';
 
 import formFields from './formFields';
 import WordField from './WordField';
 
 class WordForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+
+        const data = this.props.formData;
+
+        if (data) {
+            this.state = data.data;
+        }
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event) {
+        const name = event.target.name;
+        const val = event.target.value;
+
+        this.setState({
+            [name]: val
+        })
+    }
+
     renderFields() {
         return _.map(formFields, ({ label, name, type, isRequired, error }) => {
             let required = value => (isRequired && !value ? error : '');
@@ -17,8 +39,10 @@ class WordForm extends Component {
                 key={name}
                 label={label}
                 validate={required}
+                inputValue={this.state[name]}
+                onChange={this.handleChange}
             >
-            </Field>
+            </Field >
         });
     }
 
@@ -38,4 +62,4 @@ class WordForm extends Component {
 export default reduxForm({
     form: 'wordForm',
     destroyOnUnmount: false
-})(WordForm);
+})(withRouter(WordForm));

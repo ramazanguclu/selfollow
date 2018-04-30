@@ -21,7 +21,7 @@ class DictionaryWords extends Component {
     }
 
     renderWords() {
-        return this.props.dictionaryWords.reverse().map((v) => {
+        return this.props.dictionaryWords.map((v) => {
             return (
                 <div key={v._id} className="row">
                     <div className="col s12">
@@ -33,7 +33,11 @@ class DictionaryWords extends Component {
                                 <p>{v.example}</p>
                             </div>
                             <div className="card-action">
-                                <Link to={'/dictionary/words/' + this.groupName + '/' + this.groupId + '/update/' + v._id}><i className="material-icons">update</i></Link>
+                                <Link
+                                    to={{ pathname: '/dictionary/words/' + this.groupName + '/' + this.groupId + '/update/' + v._id, query: { data: v } }}
+                                >
+                                    <i className="material-icons">update</i>
+                                </Link>
                                 <a onClick={(e) => this.deleteWordItem(v._id, e)} href="#"><i className="material-icons">delete</i></a>
                             </div>
                         </div>

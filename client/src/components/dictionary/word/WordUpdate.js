@@ -9,6 +9,7 @@ import WordFormReview from './WordFormPreview';
 class WordUpdate extends Component {
     constructor(props) {
         super(props);
+        this.formData = this.props.location.query;
         this.groupName = this.props.match.params.groupName;
         this.groupId = this.props.match.params.group_id;
     }
@@ -20,7 +21,7 @@ class WordUpdate extends Component {
             return <WordFormReview onCancel={() => this.setState({ showWordReview: false })} />;
         }
 
-        return <WordForm groupId={this.groupId} groupName={this.groupName} onWordSubmit={() => this.setState({ showWordReview: true })} />;
+        return <WordForm formData={this.formData} groupId={this.groupId} groupName={this.groupName} onWordSubmit={() => this.setState({ showWordReview: true })} />;
     }
 
     render() {

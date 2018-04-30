@@ -26,7 +26,7 @@ export const fetchWordGroups = () => async (dispatch) => {
 
     dispatch({
         type: FETCH_WORD_GROUPS,
-        payload: res.data
+        payload: res.data.reverse()
     });
 }
 
@@ -35,7 +35,7 @@ export const fetchDictionaryWords = (groupName, groupId) => async (dispatch) => 
 
     dispatch({
         type: FETCH_DICTIONARY_WORDS,
-        payload: res.data
+        payload: res.data.reverse()
     });
 }
 

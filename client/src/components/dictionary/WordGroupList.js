@@ -9,7 +9,7 @@ class WordGroupList extends Component {
     }
 
     renderWordGroups() {
-        return this.props.wordGroup.reverse().map((group) => {
+        return this.props.wordGroup.map((group) => {
             return (
                 <li key={group._id} className="collection-item">
                     <div>
