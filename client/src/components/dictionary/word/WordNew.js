@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
 
-import WordField from './WordField';
-import formFields from './formFields';
 import WordForm from './WordForm';
 import WordFormReview from './WordFormPreview';
 

@@ -38,7 +38,7 @@ class DictionaryWords extends Component {
                                 >
                                     <i className="material-icons">update</i>
                                 </Link>
-                                <a onClick={(e) => this.deleteWordItem(v._id, e)} href="#"><i className="material-icons">delete</i></a>
+                                <a onClick={(e) => this.deleteWordItem(v._id, e)} href="/"><i className="material-icons">delete</i></a>
                             </div>
                         </div>
                     </div>

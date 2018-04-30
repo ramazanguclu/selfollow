@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default ({ inputValue, label, input, meta: { error, touched } }) => {
-    //console.log(inputValue)
     return (
         <div>
             <div className="red-text">{touched && error}</div>

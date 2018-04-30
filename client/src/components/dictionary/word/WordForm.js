@@ -31,7 +31,7 @@ class WordForm extends Component {
 
     renderFields() {
         return _.map(formFields, ({ label, name, type, isRequired, error }) => {
-            let required = value => (isRequired && !value ? error : '');
+            let required = value => (isRequired && !this.state[name] ? error : '');
 
             return <Field
                 name={name}
@@ -39,10 +39,10 @@ class WordForm extends Component {
                 key={name}
                 label={label}
                 validate={required}
-                inputValue={this.state[name]}
+                inputValue={this.state[name] || ''}
                 onChange={this.handleChange}
             >
-            </Field >
+            </Field>
         });
     }
 
@@ -58,6 +58,7 @@ class WordForm extends Component {
         );
     }
 }
+
 
 export default reduxForm({
     form: 'wordForm',
