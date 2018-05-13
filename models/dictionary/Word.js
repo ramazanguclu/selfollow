@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-wordSchema = new Schema({
+const wordSchema = new Schema({
     word: String,
     synonym: { type: String, default: '' },
     description: String,
