@@ -1,0 +1,9 @@
+https://reactjs.org/docs/components-and-props.html
+https://medium.com/the-many/adding-login-and-authentication-sections-to-your-react-or-react-native-app-7767fd251bd1
+http://materializecss.com/grid.html
+https://react-materialize.github.io/#/navbar
+https://medium.com/dailyjs/asynchronous-adventures-in-javascript-callbacks-39880f1b470e
+https://github.com/doctolib/react-form
+http://mongoosejs.com/docs/index.html
+https://redux-form.com/7.2.3/examples/fieldlevelvalidation/
+https://reactjs.org/docs/handling-events.html
