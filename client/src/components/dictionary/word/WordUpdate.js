@@ -27,7 +27,7 @@ class WordUpdate extends Component {
             <div>
                 {this.renderContent()}
             </div>
-        )
+        );
     }
 }
 

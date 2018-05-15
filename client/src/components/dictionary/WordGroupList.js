@@ -8,18 +8,29 @@ class WordGroupList extends Component {
         this.props.fetchWordGroups();
     }
 
+    deleteGroup(id) {
+        this.props.deleteWordGroup(id);
+    }
+
     renderWordGroups() {
         return this.props.wordGroup.map((group) => {
             return (
                 <li key={group._id} className="collection-item">
                     <div>
                         <Link to={'dictionary/words/' + group.name + '/' + group._id}>{group.name}</Link>
-                        <a href="#!" className="secondary-content">
+                        <a
+                            onClick={(e) => {
+                                e.preventDefault();
+                                this.deleteGroup(group._id);
+                            }}
+                            href="#"
+                            className="secondary-content"
+                        >
                             <i className="material-icons">delete</i>
                         </a>
                     </div>
                 </li>
-            )
+            );
         });
     }
 
@@ -31,7 +42,7 @@ class WordGroupList extends Component {
                     {this.renderWordGroups()}
                 </ul>
             </div>
-        )
+        );
     }
 }
 

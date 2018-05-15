@@ -29,8 +29,8 @@ class App extends Component {
                     </div>
                 </BrowserRouter>
             </div>
-        )
+        );
     }
-};
+}
 
 export default connect(null, actions)(App);

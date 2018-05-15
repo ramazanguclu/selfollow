@@ -7,5 +7,5 @@ export default ({ inputValue, label, input, meta: { error, touched } }) => {
             <label>{label}</label>
             <input {...input} value={inputValue} />
         </div>
-    )
+    );
 };

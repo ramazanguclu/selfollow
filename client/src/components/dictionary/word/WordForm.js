@@ -26,7 +26,7 @@ class WordForm extends Component {
 
         this.setState({
             [name]: val
-        })
+        });
     }
 
     renderFields() {
@@ -42,7 +42,7 @@ class WordForm extends Component {
                 inputValue={this.state[name] || ''}
                 onChange={this.handleChange}
             >
-            </Field>
+            </Field>;
         });
     }
 

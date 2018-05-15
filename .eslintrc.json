@@ -1,4 +1,5 @@
 {
+    "parser": "babel-eslint",
     "env": {
         "browser": true,
         "commonjs": true,
@@ -35,6 +36,7 @@
             "error",
             "always"
         ],
-        "no-console": "off"
+        "no-console": "off",
+        "no-unused-vars": "warn"
     }
 }

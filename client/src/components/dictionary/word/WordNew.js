@@ -26,7 +26,7 @@ class WordNew extends Component {
             <div>
                 {this.renderContent()}
             </div>
-        )
+        );
     }
 }
 

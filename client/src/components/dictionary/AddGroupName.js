@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 class AddGroupName extends Component {
     state = { formGroupName: '' }
-
+    
     render() {
         return (
             <form className="row">
@@ -17,18 +17,22 @@ class AddGroupName extends Component {
                     onChange={(e) => {
                         this.setState({
                             formGroupName: e.target.value
-                        })
+                        });
                     }}
                 >
                 </input>
                 <div className="col s4">
                     <button
                         onClick={(e) => {
-                            this.props.submitWordGroup({
-                                name: this.state.formGroupName
-                            }, this.props.history);
-
                             e.preventDefault();
+
+                            let gName = this.state.formGroupName;
+
+                            if(!gName) return;
+
+                            this.props.submitWordGroup({
+                                name: gName
+                            }, this.props.history);
                         }}
                         type="submit"
                         className="teal btn-floating btn-large right white-text"
@@ -37,7 +41,7 @@ class AddGroupName extends Component {
                     </button>
                 </div>
             </form>
-        )
+        );
     }
 }
 

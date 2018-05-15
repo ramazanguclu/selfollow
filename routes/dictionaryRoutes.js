@@ -33,6 +33,23 @@ module.exports = (app) => {
 
         res.send(groups);
     });
+    
+    //dictionary group delete
+    app.post('/api/dictionary/groups/delete', async (req, res) => {
+        const { delete_id } = req.body;
+
+        try {
+            await WordGroup.findByIdAndRemove(delete_id);
+
+            const groups = await WordGroup.find({ _user: req.user.id }).select({
+                __v: false
+            });
+
+            res.send(groups);
+        } catch (err) {
+            res.status(422).send(err);
+        }
+    });
 
     //dictionary words create
     app.post('/api/dictionary/words/new', requireLogin, async (req, res) => {
@@ -89,10 +106,24 @@ module.exports = (app) => {
 
     //dictionary words update
     app.post('/api/dictionary/words/update', requireLogin, async (req, res) => {
-        const { updateId, group_id } = req.body;
+        const { word_id, group_id, word, synonym, description, example } = req.body;
 
         try {
-            //TO-DO
+            await Word.findByIdAndUpdate(word_id, {
+                word,
+                synonym,
+                description,
+                example,
+                dateSent: Date.now(),
+                _group: group_id,
+                _user: req.user.id
+            });
+
+            const words = await Word.find({ _user: req.user.id, _group: group_id }).select({
+                __v: false
+            });
+
+            res.send(words);
         } catch (err) {
             res.status(422).send(err);
         }
