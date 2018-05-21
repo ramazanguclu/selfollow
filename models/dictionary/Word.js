@@ -9,6 +9,6 @@ const wordSchema = new Schema({
     dateSent: Date,
     _group: { type: Schema.Types.ObjectId, ref: 'WordGroup' },
     _user: { type: Schema.Types.ObjectId, ref: 'User' }
-});
+}, { versionKey: false });
 
 mongoose.model('words', wordSchema);
