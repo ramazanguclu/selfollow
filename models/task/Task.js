@@ -4,8 +4,9 @@ const { Schema } = mongoose;
 const taskSchema = new Schema({
     name: String,
     description: { type: String, default: '' },
-    category: { type: Schema.Types.ObjectId, ref: 'TaskCategory' },
-    total: Number,
+    _category: { type: Schema.Types.ObjectId, ref: 'TaskCategory' },
+    _user: { type: Schema.Types.ObjectId, ref: 'User' },
+    total: { type: Number, default: 0 },
     logs: [{ type: Schema.Types.ObjectId, ref: 'TaskLog' }]
 }, { versionKey: false });
 

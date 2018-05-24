@@ -4,7 +4,7 @@ const Word = mongoose.model('words');
 
 const requireLogin = require('../middlewares/requirelogin');
 
-module.exports = (app) => {
+module.exports = app => {
     //#region WordGroup
 
     const getWordGroupList = (id) => {
@@ -49,7 +49,7 @@ module.exports = (app) => {
     //#endregion
 
     //#region Word
-
+    
     const wordList = (id) => {
         return Word.find({ _user: id });
     };
