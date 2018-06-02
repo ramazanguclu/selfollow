@@ -37,7 +37,7 @@ module.exports = app => {
     //task category delete
     app.post('/api/task/categories/delete', requireLogin, async (req, res) => {
         const { deleteId } = req.body;
-
+    
         try {
             await TaskCategory.findByIdAndRemove(deleteId);
             res.send(await getTaskCategories(req.user.id));

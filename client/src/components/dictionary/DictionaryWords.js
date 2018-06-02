@@ -43,7 +43,7 @@ class DictionaryWords extends Component {
                         </div>
                     </div>
                 </div>
-            )
+            );
         });
     }
 
@@ -57,7 +57,7 @@ class DictionaryWords extends Component {
                     </Link>
                 </div>
             </div>
-        )
+        );
     }
 }
 
