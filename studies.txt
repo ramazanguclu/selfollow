@@ -7,3 +7,5 @@ https://github.com/doctolib/react-form
 http://mongoosejs.com/docs/index.html
 https://redux-form.com/7.2.3/examples/fieldlevelvalidation/
 https://reactjs.org/docs/handling-events.html
+https://www.npmjs.com/package/mongoose-trigger
+https://stackoverflow.com/questions/28892379/mongoose-find-multiple-documents

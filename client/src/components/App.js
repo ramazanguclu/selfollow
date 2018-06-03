@@ -10,9 +10,14 @@ import DictionaryWords from './dictionary/DictionaryWords';
 import WordNew from './dictionary/word/WordNew';
 import WordUpdate from './dictionary/word/WordUpdate';
 
+import TaskNew from './task/TaskNew';
+
+import M from 'materialize-css/dist/js/materialize.min.js';
+
 class App extends Component {
     componentDidMount() {
         this.props.fetchUser();
+        M.AutoInit();
     }
 
     render() {
@@ -22,6 +27,8 @@ class App extends Component {
                     <div>
                         <Header />
                         <Route exact path="/" component={Main} />
+                        <Route exact path="/task/new" component={TaskNew} />
+
                         <Route exact path="/dictionary" component={Dictionary} />
                         <Route exact path="/dictionary/words/:groupName/:group_id" component={DictionaryWords} />
                         <Route exact path="/dictionary/words/:groupName/:group_id/new" component={WordNew} />

@@ -1,9 +1,17 @@
 const mongoose = require('mongoose');
-const requireLogin = require('../middlewares/requirelogin');
 const WordGroup = mongoose.model('wordGroups');
 const Word = mongoose.model('words');
 
-module.exports = (app) => {
+const requireLogin = require('../middlewares/requirelogin');
+
+module.exports = app => {
+    //#region WordGroup
+
+    const getWordGroupList = (id) => {
+        return WordGroup.find({ _user: id });
+    };
+
+    //dictionary group create
     app.post('/api/dictionary/groups', requireLogin, async (req, res) => {
         const { name } = req.body;
 
@@ -15,41 +23,36 @@ module.exports = (app) => {
 
         try {
             await wordGroup.save();
-
-            const groupsRes = await WordGroup.find({ _user: req.user.id }).select({
-                __v: false
-            });
-
-            res.send(groupsRes);
+            res.send(await getWordGroupList(req.user.id));
         } catch (err) {
             res.status(422).send(err);
         }
     });
 
+    //dictionary group list
     app.get('/api/dictionary/groups', requireLogin, async (req, res) => {
-        const groups = await WordGroup.find({ _user: req.user.id }).select({
-            __v: false
-        });
-
-        res.send(groups);
+        res.send(await getWordGroupList(req.user.id));
     });
-    
+
     //dictionary group delete
-    app.post('/api/dictionary/groups/delete', async (req, res) => {
+    app.post('/api/dictionary/groups/delete', requireLogin, async (req, res) => {
         const { delete_id } = req.body;
 
         try {
             await WordGroup.findByIdAndRemove(delete_id);
-
-            const groups = await WordGroup.find({ _user: req.user.id }).select({
-                __v: false
-            });
-
-            res.send(groups);
+            res.send(await getWordGroupList(req.user.id));
         } catch (err) {
             res.status(422).send(err);
         }
     });
+
+    //#endregion
+
+    //#region Word
+    
+    const wordList = (id) => {
+        return Word.find({ _user: id });
+    };
 
     //dictionary words create
     app.post('/api/dictionary/words/new', requireLogin, async (req, res) => {
@@ -67,12 +70,7 @@ module.exports = (app) => {
 
         try {
             await wordOfGroup.save();
-
-            const words = await Word.find({ _user: req.user.id, _group: req.params.group_id }).select({
-                __v: false
-            });
-
-            res.send(words);
+            res.send(await wordList(req.user.id));
         } catch (err) {
             res.status(422).send(err);
         }
@@ -80,11 +78,7 @@ module.exports = (app) => {
 
     //dictionary words list
     app.get('/api/dictionary/words/:groupName/:groupId', requireLogin, async (req, res) => {
-        const words = await Word.find({ _user: req.user.id, _group: req.params.groupId }).select({
-            __v: false
-        });
-
-        res.send(words);
+        res.send(await wordList(req.user.id));
     });
 
     //dictionary words delete
@@ -93,12 +87,7 @@ module.exports = (app) => {
 
         try {
             await Word.findByIdAndRemove(deleteId);
-
-            const words = await Word.find({ _user: req.user.id, _group: group_id }).select({
-                __v: false
-            });
-
-            res.send(words);
+            res.send(await wordList(req.user.id));
         } catch (err) {
             res.status(422).send(err);
         }
@@ -119,13 +108,11 @@ module.exports = (app) => {
                 _user: req.user.id
             });
 
-            const words = await Word.find({ _user: req.user.id, _group: group_id }).select({
-                __v: false
-            });
-
-            res.send(words);
+            res.send(await wordList(req.user.id));
         } catch (err) {
             res.status(422).send(err);
         }
     });
-}
+
+    //#endregion
+};

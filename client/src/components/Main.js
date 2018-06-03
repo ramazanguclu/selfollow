@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
+import AddCategory from './task/AddCategory';
+import ListCategory from './task/ListCategory';
 
 class Main extends Component {
     render() {
         return (
-            <h1>Main Page</h1>
+            <div>
+                <AddCategory />
+                <ListCategory />
+            </div>
         );
     }
 }

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_USER, FETCH_WORD_GROUPS, FETCH_DICTIONARY_WORDS } from './types';
+import { FETCH_USER, FETCH_WORD_GROUPS, FETCH_DICTIONARY_WORDS, FETCH_TASK_CATEGORIES, FETCH_TASKS } from './types';
 
 export const fetchUser = () => async (dispatch) => {
     const res = await axios.get('/api/current_user');
@@ -75,6 +75,45 @@ export const updateDictionaryWord = (word, history) => async (dispatch) => {
 
     dispatch({
         type: FETCH_DICTIONARY_WORDS,
+        payload: res.data.reverse()
+    });
+};
+
+export const fetchTaskCategories = () => async (dispatch) => {
+    const res = await axios.get('/api/task/categories');
+
+    dispatch({
+        type: FETCH_TASK_CATEGORIES,
+        payload: res.data.reverse()
+    });
+};
+
+export const submitTaskCategory = (category) => async (dispatch) => {
+    const res = await axios.post('/api/task/categories/new', category);
+
+    dispatch({
+        type: FETCH_TASK_CATEGORIES,
+        payload: res.data.reverse()
+    });
+};
+
+export const deleteTaskCategory = (deleteId) => async (dispatch) => {
+    const res = await axios.post('/api/task/categories/delete', { deleteId });
+
+    dispatch({
+        type: FETCH_TASK_CATEGORIES,
+        payload: res.data.reverse()
+    });
+};
+
+export const submitTask = (task, button) => async (dispatch) => {
+    const res = await axios.post('/api/task/new', task);
+
+    button.classList.remove('disabled');
+    document.querySelector('.progress').classList.add('hide');
+
+    dispatch({
+        type: FETCH_TASKS,
         payload: res.data.reverse()
     });
 };
