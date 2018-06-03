@@ -20,14 +20,13 @@ class ListCategory extends Component {
     }
 
     renderContent() {
-        return this.props.taskCategory.map((v, k) => {
-            console.log(k)
+        return this.props.taskCategories.map((v) => {
             return (
                 <li key={v._id}>
                     <div className="collapsible-header">
                         <div style={{ width: '100%' }}>{v.name}</div>
                         <a href="#" onClick={this.handleDeleteSubmit} className="secondary-content">
-                            <input data={v._id} type="hidden" name="" />
+                            <input data={v._id} type="hidden" />
                             <i className="material-icons">delete</i>
                         </a>
                     </div>
@@ -39,17 +38,15 @@ class ListCategory extends Component {
 
     render() {
         return (
-            <div className="test">
-                <ul className="collapsible">
-                    {this.renderContent()}
-                </ul>
-            </div>
+            <ul className="collapsible">
+                {this.renderContent()}
+            </ul>
         );
     }
 }
 
-function mapStateToProps({ taskCategory }) {
-    return { taskCategory };
+function mapStateToProps({ taskCategories }) {
+    return { taskCategories };
 }
 
 export default connect(mapStateToProps, actions)(ListCategory);

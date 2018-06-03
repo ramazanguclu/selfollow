@@ -57,7 +57,7 @@ if (process.env.NODE_ENV === 'production') {
             'index.html'
         ));
     });
-};
+}
 
 const PORT = process.env.PORT || 1000;
 app.listen(PORT, () => {

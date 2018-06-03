@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import M from 'materialize-css/dist/js/materialize.min.js';
 
 class Header extends Component {
     renderContent() {
@@ -12,8 +11,14 @@ class Header extends Component {
         }
     }
 
-    componentDidMount() {
-        M.AutoInit();
+    listNavBar() {
+        return (
+            <div>
+                {this.renderContent()}
+                <li><Link to={this.props.auth ? '/dictionary' : '/'}>Dictionary</Link></li>
+                <Link to="/task/new" className="btn">Task Create</Link>
+            </div>
+        );
     }
 
     render() {
@@ -26,21 +31,13 @@ class Header extends Component {
                             <i className="material-icons">menu</i>
                         </a>
                         <ul className="left hide-on-med-and-down">
-                            {this.renderContent()}
-                            <li><Link to={this.props.auth ? '/dictionary' : '/'}>Dictionary</Link></li>
-                            <li><button className="btn">Task Create</button></li>
+                            {this.listNavBar()}
                         </ul>
                     </div>
                 </nav>
 
                 <ul className="sidenav teal lighten-2" id="mobile-nav">
-                    {this.renderContent()}
-                    <li><Link to={this.props.auth ? '/dictionary' : '/'}>Dictionary</Link></li>
-                    <li>
-                        <span>
-                            <button className="btn">Task Create</button>
-                        </span>
-                    </li>
+                    {this.listNavBar()}
                 </ul>
             </div>
         );
