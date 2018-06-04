@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_USER, FETCH_WORD_GROUPS, FETCH_DICTIONARY_WORDS, FETCH_TASK_CATEGORIES, FETCH_TASKS } from './types';
+import { FETCH_USER, FETCH_WORD_GROUPS, FETCH_DICTIONARY_WORDS, FETCH_TASK_CATEGORIES, FETCH_TASKS, FETCH_TASKS_BY_CATEGORY } from './types';
 
 export const fetchUser = () => async (dispatch) => {
     const res = await axios.get('/api/current_user');
@@ -115,5 +115,28 @@ export const submitTask = (task, button) => async (dispatch) => {
     dispatch({
         type: FETCH_TASKS,
         payload: res.data.reverse()
+    });
+};
+
+export const fetchTasksByCategory = (categoryName, categoryId) => async (dispatch) => {
+    const res = await axios.get('/api/tasks/' + categoryName + '/' + categoryId);
+
+    dispatch({
+        type: FETCH_TASKS_BY_CATEGORY,
+        payload: res.data.reverse()
+    });
+};
+
+export const submitTaskLog = ({ _task, _category, state, button }) => async (dispatch) => {
+    const res = await axios.post('/api/log/new', { _task, _category });
+    
+    if (res.status === 200 && res.statusText === 'OK') {
+        button.classList.remove('disabled');
+        button.innerHTML = state;
+    }
+
+    dispatch({
+        type: FETCH_TASKS_BY_CATEGORY,
+        payload: res.data
     });
 };

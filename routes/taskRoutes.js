@@ -37,7 +37,7 @@ module.exports = app => {
     //task category delete
     app.post('/api/task/categories/delete', requireLogin, async (req, res) => {
         const { deleteId } = req.body;
-    
+
         try {
             await TaskCategory.findByIdAndRemove(deleteId);
             res.send(await getTaskCategories(req.user.id));
@@ -56,7 +56,7 @@ module.exports = app => {
         return Task.find({
             '$and': [{
                 _user: userId,
-                _cattgory: catId
+                _category: catId
             }]
         });
     };
@@ -88,8 +88,8 @@ module.exports = app => {
     });
 
     //task list by category id
-    app.get('/api/tasks/:categoryName', async (req, res) => {
-        res.send(await getTaskByCategory(req.user.id, req.body.categoryId));
+    app.get('/api/tasks/:categoryName/:categoryId', async (req, res) => {
+        res.send(await getTaskByCategory(req.user.id, req.params.categoryId));
     });
 
     //task create
@@ -163,12 +163,12 @@ module.exports = app => {
                     _user: req.user._id
                 }).save();
 
-                res.send(taskLog);
+                res.send(await getTaskByCategory(req.user._id, req.params._category));
             } else {
                 await updateTaskState(_task, 'end');
                 await updateTasklogState(_task, 'start', 'end');
 
-                res.send({ status: 'success' });
+                res.send(await getTaskByCategory(req.user._id, req.params._category));
             }
         } catch (error) {
             console.log(error);
