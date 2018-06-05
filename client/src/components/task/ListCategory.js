@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import { Link } from 'react-router-dom';
 import totalTimeHuman from '../../utils/totalTimeHuman';
-import humanDate  from 'human-date';
+import humanDate from 'human-date';
 
 import M from 'materialize-css/dist/js/materialize.min.js';
 
@@ -22,7 +22,6 @@ class ListCategory extends Component {
 
     componentDidMount() {
         this.props.fetchTaskCategories();
-        this.props.fetchWorkingTask();
         this.handleOpenCollapsible();
     }
 
@@ -50,21 +49,14 @@ class ListCategory extends Component {
         const button = e.target;
 
         this.props.submitTaskLog({ _task, _category, button });
-        this.props.fetchWorkingTask();
     }
 
     detectState(state) {
         return state === 'end' ? 'START' : 'STOP';
     }
 
-    workingTask(id) {
-        const match = this.props.workingTasks.filter(v => { return v._task === id; })[0];
-        
-        if (!match) {
-            return '00:00:00';
-        }
-
-        return humanDate.relativeTime(new Date(match));
+    logStart(date) {
+        return date ? humanDate.relativeTime(new Date(date)) : '00:00:00';
     }
 
     renderCollapsibleBody(id) {
@@ -99,7 +91,7 @@ class ListCategory extends Component {
                                 <button className="btn waves-effect waves-light" onClick={this.handleStart.bind(this, v._id, v._category)}>
                                     {this.detectState(v.state)}
                                 </button>
-                                <div className="right white-text">{this.workingTask(v._id)}</div>
+                                <div className="right white-text">{this.logStart(v.start)}</div>
                             </div>
                         </div>
                     </div>
@@ -140,8 +132,8 @@ class ListCategory extends Component {
     }
 }
 
-function mapStateToProps({ taskCategories, tasksByCategory, task, workingTasks }) {
-    return { taskCategories, tasksByCategory, task, workingTasks };
+function mapStateToProps({ taskCategories, tasksByCategory, task }) {
+    return { taskCategories, tasksByCategory, task };
 }
 
 export default connect(mapStateToProps, actions)(ListCategory);

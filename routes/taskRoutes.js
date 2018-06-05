@@ -65,9 +65,10 @@ module.exports = app => {
         return Task.findById(id);
     };
 
-    const updateTaskState = (id, state) => {
+    const updateTaskState = (id, state, startDate = 0) => {
         return Task.findByIdAndUpdate(id, {
-            state: state
+            state: state,
+            start: startDate
         });
     };
 
@@ -164,7 +165,8 @@ module.exports = app => {
             const { state } = await taskById(_task);
 
             if (state === 'end') {
-                await updateTaskState(_task, 'start');
+                const dateStart = (new Date()).getTime();
+                await updateTaskState(_task, 'start', dateStart);
 
                 await new TaskLog({
                     start: (new Date()).getTime(),
