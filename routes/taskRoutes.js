@@ -37,7 +37,7 @@ module.exports = app => {
     //task category delete
     app.post('/api/task/categories/delete', requireLogin, async (req, res) => {
         const { deleteId } = req.body;
-    
+
         try {
             await TaskCategory.findByIdAndRemove(deleteId);
             res.send(await getTaskCategories(req.user.id));
@@ -56,7 +56,7 @@ module.exports = app => {
         return Task.find({
             '$and': [{
                 _user: userId,
-                _cattgory: catId
+                _category: catId
             }]
         });
     };
@@ -65,9 +65,10 @@ module.exports = app => {
         return Task.findById(id);
     };
 
-    const updateTaskState = (id, state) => {
+    const updateTaskState = (id, state, startDate = 0) => {
         return Task.findByIdAndUpdate(id, {
-            state: state
+            state: state,
+            start: startDate
         });
     };
 
@@ -88,8 +89,8 @@ module.exports = app => {
     });
 
     //task list by category id
-    app.get('/api/tasks/:categoryName', async (req, res) => {
-        res.send(await getTaskByCategory(req.user.id, req.body.categoryId));
+    app.get('/api/tasks/:categoryName/:categoryId', async (req, res) => {
+        res.send(await getTaskByCategory(req.user.id, req.params.categoryId));
     });
 
     //task create
@@ -113,12 +114,23 @@ module.exports = app => {
     //endregion
 
     //#region TaskLog
+    //task log working
+    app.get('/api/log/working', requireLogin, async (req, res) => {
+        const log = await TaskLog.find({
+            _user: req.user._id,
+            state: 'start'
+        });
+
+        res.send(log);
+    });
+
     //task log list
     app.get('/api/log/list/:taskid', requireLogin, async (req, res) => {
         res.send(await TaskLog.find({ _task: req.params.taskid }));
     });
 
     const updateTasklogState = async (taskId, currentState, nextState) => {
+
         const log = await TaskLog.findOne({
             _task: taskId,
             state: currentState
@@ -153,9 +165,10 @@ module.exports = app => {
             const { state } = await taskById(_task);
 
             if (state === 'end') {
-                await updateTaskState(_task, 'start');
+                const dateStart = (new Date()).getTime();
+                await updateTaskState(_task, 'start', dateStart);
 
-                const taskLog = await new TaskLog({
+                await new TaskLog({
                     start: (new Date()).getTime(),
                     state: 'start',
                     _task,
@@ -163,12 +176,12 @@ module.exports = app => {
                     _user: req.user._id
                 }).save();
 
-                res.send(taskLog);
+                res.send(await taskById(_task));
             } else {
                 await updateTaskState(_task, 'end');
                 await updateTasklogState(_task, 'start', 'end');
 
-                res.send({ status: 'success' });
+                res.send(await taskById(_task));
             }
         } catch (error) {
             console.log(error);

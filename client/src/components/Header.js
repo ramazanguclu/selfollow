@@ -27,7 +27,7 @@ class Header extends Component {
                 <nav className="teal lighten-2">
                     <div className="nav-wrapper">
                         <Link to={'/'} className="brand-logo right">Selfollow</Link>
-                        <a href="#" data-target="mobile-nav" className="sidenav-trigger">
+                        <a data-target="mobile-nav" className="sidenav-trigger">
                             <i className="material-icons">menu</i>
                         </a>
                         <ul className="left hide-on-med-and-down">
