@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FETCH_USER, FETCH_WORD_GROUPS, FETCH_DICTIONARY_WORDS, FETCH_TASK_CATEGORIES, FETCH_TASKS, FETCH_TASKS_BY_CATEGORY } from './types';
+import { FETCH_USER, FETCH_WORD_GROUPS, FETCH_DICTIONARY_WORDS, FETCH_TASK_CATEGORIES, FETCH_TASKS, FETCH_TASKS_BY_CATEGORY, FETCH_TASK, FETCH_WORKING_TASKS } from './types';
 
 export const fetchUser = () => async (dispatch) => {
     const res = await axios.get('/api/current_user');
@@ -127,16 +127,24 @@ export const fetchTasksByCategory = (categoryName, categoryId) => async (dispatc
     });
 };
 
-export const submitTaskLog = ({ _task, _category, state, button }) => async (dispatch) => {
+export const submitTaskLog = ({ _task, _category, button }) => async (dispatch) => {
     const res = await axios.post('/api/log/new', { _task, _category });
-    
+
     if (res.status === 200 && res.statusText === 'OK') {
         button.classList.remove('disabled');
-        button.innerHTML = state;
     }
 
     dispatch({
-        type: FETCH_TASKS_BY_CATEGORY,
+        type: FETCH_TASK,
+        payload: res.data
+    });
+};
+
+export const fetchWorkingTask = () => async (dispatch) => {
+    const res = await axios.get('/api/log/working');
+
+    dispatch({
+        type: FETCH_WORKING_TASKS,
         payload: res.data
     });
 };

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
+import { Link } from 'react-router-dom';
+import totalTimeHuman from '../../utils/totalTimeHuman';
+import humanDate  from 'human-date';
 
 import M from 'materialize-css/dist/js/materialize.min.js';
 
@@ -19,6 +22,7 @@ class ListCategory extends Component {
 
     componentDidMount() {
         this.props.fetchTaskCategories();
+        this.props.fetchWorkingTask();
         this.handleOpenCollapsible();
     }
 
@@ -39,26 +43,47 @@ class ListCategory extends Component {
         });
     }
 
-    handleStart(_task, _category, state, e) {
+    handleStart(_task, _category, e) {
         e.target.classList.add('disabled');
         e.preventDefault();
 
         const button = e.target;
 
-        this.props.submitTaskLog({ _task, _category, state, button });
+        this.props.submitTaskLog({ _task, _category, button });
     }
 
     detectState(state) {
         return state === 'end' ? 'START' : 'STOP';
     }
 
-    detectNextState(state) {
-        return state !== 'end' ? 'START' : 'STOP';
+    workingTask(id) {
+        const match = this.props.workingTasks.filter(v => { return v._task === id; })[0];
+        
+        if (!match) {
+            return '00:00:00';
+        }
+
+        return humanDate.relativeTime(new Date(match));
     }
 
     renderCollapsibleBody(id) {
         if (id === this.state.catId) {
+            if (this.props.tasksByCategory.length === 0) {
+                return (
+                    <div className="col s12">
+                        There is no task for this category please &nbsp;
+                        <Link to="/task/new">
+                            create task
+                        </Link>
+                    </div>
+                );
+            }
+
             return this.props.tasksByCategory.map((v) => {
+                if (this.props.task._id === v._id) {
+                    v = this.props.task;
+                }
+
                 return (
                     <div className="col s12 m6" key={v._id}>
                         <div className="card blue-grey darken-1">
@@ -67,19 +92,18 @@ class ListCategory extends Component {
                                     {v.name}
                                 </span>
                                 <p>{v.description}</p>
-                                <p>Total: {v.total}</p>
+                                <p>Total: {totalTimeHuman(v.total, 3)}</p>
                             </div>
                             <div className="card-action">
-                                <button className="btn waves-effect waves-light" onClick={this.handleStart.bind(this, v._id, v._category, this.detectNextState(v.state))}>
+                                <button className="btn waves-effect waves-light" onClick={this.handleStart.bind(this, v._id, v._category)}>
                                     {this.detectState(v.state)}
                                 </button>
-                                <div className="right white-text">00:00:00</div>
+                                <div className="right white-text">{this.workingTask(v._id)}</div>
                             </div>
                         </div>
                     </div>
                 );
             });
-
         }
 
         return;
@@ -108,15 +132,15 @@ class ListCategory extends Component {
 
     render() {
         return (
-            <ul className="collapsible no-autoinit">
+            <ul className="collapsible popout no-autoinit">
                 {this.renderContent()}
             </ul>
         );
     }
 }
 
-function mapStateToProps({ taskCategories, tasksByCategory }) {
-    return { taskCategories, tasksByCategory };
+function mapStateToProps({ taskCategories, tasksByCategory, task, workingTasks }) {
+    return { taskCategories, tasksByCategory, task, workingTasks };
 }
 
 export default connect(mapStateToProps, actions)(ListCategory);
