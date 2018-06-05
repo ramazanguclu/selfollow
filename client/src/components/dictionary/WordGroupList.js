@@ -23,7 +23,6 @@ class WordGroupList extends Component {
                                 e.preventDefault();
                                 this.deleteGroup(group._id);
                             }}
-                            href="#"
                             className="secondary-content"
                         >
                             <i className="material-icons">delete</i>

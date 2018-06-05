@@ -50,6 +50,7 @@ class ListCategory extends Component {
         const button = e.target;
 
         this.props.submitTaskLog({ _task, _category, button });
+        this.props.fetchWorkingTask();
     }
 
     detectState(state) {
@@ -115,7 +116,7 @@ class ListCategory extends Component {
                 <li key={v._id} data={v._id} name={v.name}>
                     <div className="collapsible-header">
                         <div style={{ width: '100%' }}>{v.name}</div>
-                        <a href="#" onClick={this.handleDeleteSubmit} className="secondary-content">
+                        <a onClick={this.handleDeleteSubmit} className="secondary-content">
                             <input data={v._id} type="hidden" />
                             <i className="material-icons">delete</i>
                         </a>
