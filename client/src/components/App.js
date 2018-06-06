@@ -9,14 +9,21 @@ import Dictionary from './dictionary/Dictionary';
 import DictionaryWords from './dictionary/DictionaryWords';
 import WordNew from './dictionary/word/WordNew';
 import WordUpdate from './dictionary/word/WordUpdate';
+import Login from './Login';
+
+import Restricted from './middlewares/Restricted';
 
 import TaskNew from './task/TaskNew';
 
 import M from 'materialize-css/dist/js/materialize.min.js';
 
 class App extends Component {
-    componentDidMount() {
+    constructor(props) {
+        super(props);
         this.props.fetchUser();
+    }
+ 
+    componentDidMount() {
         M.AutoInit();
     }
 
@@ -26,13 +33,15 @@ class App extends Component {
                 <BrowserRouter>
                     <div>
                         <Header />
-                        <Route exact path="/" component={Main} />
-                        <Route exact path="/task/new" component={TaskNew} />
+                        <Route exact path="/login" component={Login} />
 
-                        <Route exact path="/dictionary" component={Dictionary} />
-                        <Route exact path="/dictionary/words/:groupName/:group_id" component={DictionaryWords} />
-                        <Route exact path="/dictionary/words/:groupName/:group_id/new" component={WordNew} />
-                        <Route exact path="/dictionary/words/:groupName/:group_id/update/:word_id" component={WordUpdate} />
+                        <Route exact path="/" component={Restricted(Main)} />
+                        <Route exact path="/task/new" component={Restricted(TaskNew)} />
+
+                        <Route exact path="/dictionary" component={Restricted(Dictionary)} />
+                        <Route exact path="/dictionary/words/:groupName/:group_id" component={Restricted(DictionaryWords)} />
+                        <Route exact path="/dictionary/words/:groupName/:group_id/new" component={Restricted(WordNew)} />
+                        <Route exact path="/dictionary/words/:groupName/:group_id/update/:word_id" component={Restricted(WordUpdate)} />
                     </div>
                 </BrowserRouter>
             </div>
@@ -40,4 +49,8 @@ class App extends Component {
     }
 }
 
-export default connect(null, actions)(App);
+function mapStateToProps({ auth }) {
+    return { auth };
+}
+
+export default connect(mapStateToProps, actions)(App);

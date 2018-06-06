@@ -13,7 +13,7 @@ class TaskNew extends Component {
         this.handleBack = this.handleBack.bind(this);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.props.fetchTaskCategories();
     }
 
@@ -77,7 +77,7 @@ class TaskNew extends Component {
 
                     <div className="input-field col s12">
                         <select name="_category" onChange={this.handleChange}>
-                            <option value="" disabled selected>Choose Task Category</option>
+                            <option value="" disabled>Choose Task Category</option>
                             {this.renderTaskCategories()}
                         </select>
                         <label>Categories</label>
