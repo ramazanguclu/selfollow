@@ -20,8 +20,11 @@ class ListCategory extends Component {
         this.props.deleteTaskCategory(id);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.props.fetchTaskCategories();
+    }
+
+    componentDidMount() {
         this.handleOpenCollapsible();
     }
 
