@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 
@@ -10,6 +10,7 @@ import DictionaryWords from './dictionary/DictionaryWords';
 import WordNew from './dictionary/word/WordNew';
 import WordUpdate from './dictionary/word/WordUpdate';
 import Login from './Login';
+import NotFound from './NotFound';
 
 import Restricted from './middlewares/Restricted';
 
@@ -22,7 +23,7 @@ class App extends Component {
         super(props);
         this.props.fetchUser();
     }
- 
+
     componentDidMount() {
         M.AutoInit();
     }
@@ -33,15 +34,19 @@ class App extends Component {
                 <BrowserRouter>
                     <div>
                         <Header />
-                        <Route exact path="/login" component={Login} />
+                        <Switch>
+                            <Route exact path="/login" component={Login} />
 
-                        <Route exact path="/" component={Restricted(Main)} />
-                        <Route exact path="/task/new" component={Restricted(TaskNew)} />
+                            <Route exact path="/" component={Restricted(Main)} />
+                            <Route exact path="/task/new" component={Restricted(TaskNew)} />
 
-                        <Route exact path="/dictionary" component={Restricted(Dictionary)} />
-                        <Route exact path="/dictionary/words/:groupName/:group_id" component={Restricted(DictionaryWords)} />
-                        <Route exact path="/dictionary/words/:groupName/:group_id/new" component={Restricted(WordNew)} />
-                        <Route exact path="/dictionary/words/:groupName/:group_id/update/:word_id" component={Restricted(WordUpdate)} />
+                            <Route exact path="/dictionary" component={Restricted(Dictionary)} />
+                            <Route exact path="/dictionary/words/:groupName/:group_id" component={Restricted(DictionaryWords)} />
+                            <Route exact path="/dictionary/words/:groupName/:group_id/new" component={Restricted(WordNew)} />
+                            <Route exact path="/dictionary/words/:groupName/:group_id/update/:word_id" component={Restricted(WordUpdate)} />
+
+                            <Route component={NotFound} />
+                        </Switch>
                     </div>
                 </BrowserRouter>
             </div>
