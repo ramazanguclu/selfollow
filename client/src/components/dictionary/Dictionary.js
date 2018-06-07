@@ -12,9 +12,8 @@ const Dictionary = () => {
             <div className="section">
                 <WordGroupList />
             </div>
-            <div className="divider"></div>
         </div>
-    )
-}
+    );
+};
 
 export default Dictionary;
