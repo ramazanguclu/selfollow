@@ -79,7 +79,7 @@ export const updateDictionaryWord = (word, history) => async (dispatch) => {
     });
 };
 
-export const fetchTaskCategories = () => async (dispatch) => {
+export const fetchTaskCategories = () => async (dispatch) => {    
     const res = await axios.get('/api/task/categories');
 
     dispatch({
@@ -124,6 +124,7 @@ export const fetchTasksByCategory = (categoryName, categoryId) => async (dispatc
     const res = await axios.get('/api/tasks/' + categoryName + '/' + categoryId);
 
     dispatch({
+        id: categoryId,
         type: FETCH_TASKS_BY_CATEGORY,
         payload: res.data.reverse()
     });

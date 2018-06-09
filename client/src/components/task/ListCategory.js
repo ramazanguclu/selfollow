@@ -7,6 +7,8 @@ import humanDate from 'human-date';
 
 import M from 'materialize-css/dist/js/materialize.min.js';
 
+import Loading from '../Loading';
+
 class ListCategory extends Component {
     constructor(props) {
         super(props);
@@ -32,9 +34,9 @@ class ListCategory extends Component {
         const catId = item.getAttribute('data');
         const catName = item.getAttribute('name');
 
-        this.props.fetchTasksByCategory(catName, catId);
-
         this.setState({ catId });
+
+        this.props.fetchTasksByCategory(catName, catId);
     }
 
     handleOpenCollapsible() {
@@ -62,47 +64,41 @@ class ListCategory extends Component {
         return date ? humanDate.relativeTime(new Date(date)) : '00:00:00';
     }
 
-    renderCollapsibleBody(id) {
-        if (id === this.state.catId) {
-            if (this.props.tasksByCategory.length === 0) {
-                return (
-                    <div className="col s12">
-                        There is no task for this category please &nbsp;
-                        <Link to="/task/new">
-                            create task
-                        </Link>
-                    </div>
-                );
-            }
-
-            return this.props.tasksByCategory.map((v) => {
-                if (this.props.task._id === v._id) {
-                    v = this.props.task;
-                }
-
-                return (
-                    <div className="col s12 m6" key={v._id}>
-                        <div className="card blue-grey darken-1">
-                            <div className="card-content white-text">
-                                <span className="card-title">
-                                    {v.name}
-                                </span>
-                                <p>{v.description}</p>
-                                <p>Total: {totalTimeHuman(v.total, 3)}</p>
-                            </div>
-                            <div className="card-action">
-                                <button className="btn waves-effect waves-light" onClick={this.handleStart.bind(this, v._id, v._category)}>
-                                    {this.detectState(v.state)}
-                                </button>
-                                <div className="right white-text">{this.logStart(v.start)}</div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            });
+    renderCollapsibleBody() {
+        if (this.props.tasksByCategory.data.length === 0) {
+            return (
+                <div className="col s12">
+                    There is no task for this category please &nbsp;
+                    <Link to="/task/new">create task</Link>
+                </div>
+            );
         }
 
-        return;
+        return this.props.tasksByCategory.data.map((v) => {
+            if (this.props.task._id === v._id) {
+                v = this.props.task;
+            }
+
+            return (
+                <div className="col s12 m6" key={v._id}>
+                    <div className="card blue-grey darken-1">
+                        <div className="card-content white-text">
+                            <span className="card-title">
+                                {v.name}
+                            </span>
+                            <p>{v.description}</p>
+                            <p>Total: {totalTimeHuman(v.total, 3)}</p>
+                        </div>
+                        <div className="card-action">
+                            <button className="btn waves-effect waves-light" onClick={this.handleStart.bind(this, v._id, v._category)}>
+                                {this.detectState(v.state)}
+                            </button>
+                            <div className="right white-text">{this.logStart(v.start)}</div>
+                        </div>
+                    </div>
+                </div>
+            );
+        });
     }
 
     renderContent() {
@@ -117,9 +113,12 @@ class ListCategory extends Component {
                         </a>
                     </div>
                     <div className="collapsible-body">
-                        <div className="row">
-                            {this.renderCollapsibleBody(v._id)}
-                        </div>
+                        {this.props.tasksByCategory.id !== this.state.catId ?
+                            <Loading /> :
+                            <div className="row">
+                                {this.renderCollapsibleBody(v._id)}
+                            </div>
+                        }
                     </div>
                 </li>
             );
