@@ -7,12 +7,6 @@ import { connect } from 'react-redux';
 import * as actions from '../../actions';
 
 class CollapsibleBody extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = { _task: '' };
-    }
-
     detectState(state) {
         return state === 'end' ? 'START' : 'STOP';
     }
@@ -23,7 +17,6 @@ class CollapsibleBody extends Component {
 
     handleStart(_task, _category, e) {
         e.target.classList.add('disabled');
-        this.setState({ _task });
         e.preventDefault();
 
         const button = e.target;
@@ -41,14 +34,7 @@ class CollapsibleBody extends Component {
     }
 
     renderCollapsibleBody() {
-        const state = this.state._task;
-        const reducerTask = this.props.task;
-
-        return this.props.tasksByCategory.data.map(v => {
-            if (v._id === reducerTask._id && v._id === state) {
-                v = reducerTask;
-            }
-
+        return this.props.tasksByCategory.data.reverse().map(v => {
             return (
                 <div className="col s12 m6" key={v._id}>
                     <div className="card blue-grey darken-1">
@@ -83,8 +69,8 @@ class CollapsibleBody extends Component {
     }
 }
 
-function mapStateToProps({ tasksByCategory, task }) {
-    return { tasksByCategory, task };
+function mapStateToProps({ tasksByCategory }) {
+    return { tasksByCategory };
 }
 
 export default connect(mapStateToProps, actions)(CollapsibleBody);

@@ -176,12 +176,12 @@ module.exports = app => {
                     _user: req.user._id
                 }).save();
 
-                res.send(await taskById(_task));
+                res.send(await getTaskByCategory(req.user._id, _category));
             } else {
                 await updateTaskState(_task, 'end');
                 await updateTasklogState(_task, 'start', 'end');
 
-                res.send(await taskById(_task));
+                res.send(await getTaskByCategory(req.user._id, _category));
             }
         } catch (error) {
             console.log(error);
