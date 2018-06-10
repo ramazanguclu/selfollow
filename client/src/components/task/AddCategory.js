@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import * as actions from '../../actions';
 import { connect } from 'react-redux';
 
+import validateName from '../../utils/validateName';
+import modifyName from '../../utils/modifyName';
+
 class AddCategory extends Component {
     constructor(props) {
         super(props);
@@ -9,7 +12,7 @@ class AddCategory extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 
-        this.state = {};
+        this.state = { name: '' };
     }
 
     handleChange(e) {
@@ -19,21 +22,42 @@ class AddCategory extends Component {
         this.setState({
             [name]: val
         });
+
+        this.errorMessage(val);
+    }
+
+    errorMessage(v) {
+        const elem = document.querySelector('#cat_name_error');
+
+        if (validateName(v)) {
+            elem.classList.add('hide');
+            return;
+        }
+
+        elem.classList.remove('hide');
     }
 
     handleSubmit(e) {
         e.preventDefault();
 
-        if (!this.state['name']) return;
+        let name = this.state['name'];
+        name = modifyName(name);
 
-        this.props.submitTaskCategory(this.state);
+        if (!validateName(name)) return;
+
+        this.props.submitTaskCategory({ name });
     }
 
     render() {
         return (
             <div className="section">
                 <div className="row">
-                    <input className="col s7" placeholder="Add Task Category" type="text" name="name" onChange={this.handleChange} />
+                    <div className="input-field col s7">
+                        <input className="validate" id="cat_name_input" type="text" name="name" onChange={this.handleChange} />
+                        <label htmlFor="cat_name_input">Add Task Category</label>
+                        <span id="cat_name_error" className="red-text hide">Not Valid Name</span>
+                    </div>
+
                     <div className="col s5">
                         <button className="teal btn-floating btn-large right white-text" onClick={this.handleSubmit}>
                             <i className="material-icons">add</i>
