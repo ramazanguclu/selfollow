@@ -73,9 +73,16 @@ class ListCategory extends Component {
 
     render() {
         return (
-            <ul className="collapsible popout no-autoinit">
-                {this.renderContent()}
-            </ul>
+            <div>
+                <div className="divider"></div>
+                <div className="section center-align">
+                    <h4>Categories</h4>
+                </div>
+                <div className="divider"></div>
+                <ul className="collapsible popout no-autoinit">
+                    {this.renderContent()}
+                </ul>
+            </div>
         );
     }
 }
