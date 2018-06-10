@@ -21,7 +21,11 @@ import M from 'materialize-css/dist/js/materialize.min.js';
 class App extends Component {
     constructor(props) {
         super(props);
-        this.props.fetchUser();
+
+        const id = new Date().getTime();
+
+        this.state = { id };
+        this.props.fetchUser(id);
     }
 
     componentDidMount() {
@@ -29,6 +33,8 @@ class App extends Component {
     }
 
     render() {
+        const id = this.state.id;
+
         return (
             <div className="container">
                 <BrowserRouter>
@@ -37,13 +43,13 @@ class App extends Component {
                         <Switch>
                             <Route exact path="/login" component={Login} />
 
-                            <Route exact path="/" component={Restricted(Main)} />
-                            <Route exact path="/task/new" component={Restricted(TaskNew)} />
+                            <Route exact path="/" component={Restricted(Main, id)} />
+                            <Route exact path="/task/new" component={Restricted(TaskNew, id)} />
 
-                            <Route exact path="/dictionary" component={Restricted(Dictionary)} />
-                            <Route exact path="/dictionary/words/:groupName/:group_id" component={Restricted(DictionaryWords)} />
-                            <Route exact path="/dictionary/words/:groupName/:group_id/new" component={Restricted(WordNew)} />
-                            <Route exact path="/dictionary/words/:groupName/:group_id/update/:word_id" component={Restricted(WordUpdate)} />
+                            <Route exact path="/dictionary" component={Restricted(Dictionary, id)} />
+                            <Route exact path="/dictionary/words/:groupName/:group_id" component={Restricted(DictionaryWords, id)} />
+                            <Route exact path="/dictionary/words/:groupName/:group_id/new" component={Restricted(WordNew, id)} />
+                            <Route exact path="/dictionary/words/:groupName/:group_id/update/:word_id" component={Restricted(WordUpdate, id)} />
 
                             <Route component={NotFound} />
                         </Switch>
