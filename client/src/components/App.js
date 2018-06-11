@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 
@@ -9,30 +9,50 @@ import Dictionary from './dictionary/Dictionary';
 import DictionaryWords from './dictionary/DictionaryWords';
 import WordNew from './dictionary/word/WordNew';
 import WordUpdate from './dictionary/word/WordUpdate';
+import Login from './Login';
+import NotFound from './NotFound';
+
+import Restricted from './middlewares/Restricted';
 
 import TaskNew from './task/TaskNew';
 
 import M from 'materialize-css/dist/js/materialize.min.js';
 
 class App extends Component {
+    constructor(props) {
+        super(props);
+
+        const id = new Date().getTime();
+
+        this.state = { id };
+        this.props.fetchUser(id);
+    }
+
     componentDidMount() {
-        this.props.fetchUser();
         M.AutoInit();
     }
 
     render() {
+        const id = this.state.id;
+
         return (
             <div className="container">
                 <BrowserRouter>
                     <div>
                         <Header />
-                        <Route exact path="/" component={Main} />
-                        <Route exact path="/task/new" component={TaskNew} />
+                        <Switch>
+                            <Route exact path="/login" component={Login} />
 
-                        <Route exact path="/dictionary" component={Dictionary} />
-                        <Route exact path="/dictionary/words/:groupName/:group_id" component={DictionaryWords} />
-                        <Route exact path="/dictionary/words/:groupName/:group_id/new" component={WordNew} />
-                        <Route exact path="/dictionary/words/:groupName/:group_id/update/:word_id" component={WordUpdate} />
+                            <Route exact path="/" component={Restricted(Main, id)} />
+                            <Route exact path="/task/new" component={Restricted(TaskNew, id)} />
+
+                            <Route exact path="/dictionary" component={Restricted(Dictionary, id)} />
+                            <Route exact path="/dictionary/words/:groupName/:group_id" component={Restricted(DictionaryWords, id)} />
+                            <Route exact path="/dictionary/words/:groupName/:group_id/new" component={Restricted(WordNew, id)} />
+                            <Route exact path="/dictionary/words/:groupName/:group_id/update/:word_id" component={Restricted(WordUpdate, id)} />
+
+                            <Route component={NotFound} />
+                        </Switch>
                     </div>
                 </BrowserRouter>
             </div>
@@ -40,4 +60,8 @@ class App extends Component {
     }
 }
 
-export default connect(null, actions)(App);
+function mapStateToProps({ auth }) {
+    return { auth };
+}
+
+export default connect(mapStateToProps, actions)(App);

@@ -10,3 +10,7 @@ https://reactjs.org/docs/handling-events.html
 https://www.npmjs.com/package/mongoose-trigger
 https://stackoverflow.com/questions/28892379/mongoose-find-multiple-documents
 https://reactjs.org/docs/conditional-rendering.html
+https://medium.com/the-many/adding-login-and-authentication-sections-to-your-react-or-react-native-app-7767fd251bd1
+https://github.com/schnee72/react-router-dom-example
+https://engineering.musefind.com/react-lifecycle-methods-how-and-when-to-use-them-2111a1b692b1
+https://stackoverflow.com/questions/32128978/react-router-no-not-found-route

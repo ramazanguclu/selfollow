@@ -4,19 +4,17 @@ import { Link } from 'react-router-dom';
 
 class Header extends Component {
     renderContent() {
-        switch (this.props.auth) {
-            case null: return;
-            case false: return <li><a href="/auth/google">Login With Google</a></li>;
-            default: return <li><a href="/api/logout">Logout</a></li>;
-        }
+        if (this.props.auth.data) return <li><a href="/api/logout">Logout</a></li>;
+
+        return <li><a href="/auth/google">Login With Google</a></li>;
     }
 
     listNavBar() {
         return (
             <div>
                 {this.renderContent()}
-                <li><Link to={this.props.auth ? '/dictionary' : '/'}>Dictionary</Link></li>
-                <Link to="/task/new" className="btn">Task Create</Link>
+                <li><Link to={this.props.auth.data ? '/dictionary' : '/login'}>Dictionary</Link></li>
+                <Link to={this.props.auth.data ? '/task/new' : '/login'} className="btn">Task Create</Link>
             </div>
         );
     }
@@ -26,7 +24,7 @@ class Header extends Component {
             <div>
                 <nav className="teal lighten-2">
                     <div className="nav-wrapper">
-                        <Link to={'/'} className="brand-logo right">Selfollow</Link>
+                        <Link to={this.props.auth.data ? '/' : '/login'} className="brand-logo right">Selfollow</Link>
                         <a data-target="mobile-nav" className="sidenav-trigger">
                             <i className="material-icons">menu</i>
                         </a>

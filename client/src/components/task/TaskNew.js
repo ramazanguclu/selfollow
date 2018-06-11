@@ -4,6 +4,9 @@ import { withRouter } from 'react-router-dom';
 import * as actions from '../../actions';
 import M from 'materialize-css/dist/js/materialize.min.js';
 
+import modifyName from '../../utils/modifyName';
+import taskFormField from './taskFormField';
+
 class TaskNew extends Component {
     constructor(props) {
         super(props);
@@ -11,10 +14,16 @@ class TaskNew extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleBack = this.handleBack.bind(this);
+
+        this.state = {};
+    }
+
+    componentWillMount() {
+        this.props.fetchTaskCategories();
     }
 
     componentDidMount() {
-        this.props.fetchTaskCategories();
+        M.AutoInit();
     }
 
     componentDidUpdate() {
@@ -49,10 +58,25 @@ class TaskNew extends Component {
         this.props.submitTask(this.state, e.target);
     }
 
+    error() {
+        const button = document.querySelector('button[type=submit]');
+
+        for (const v of taskFormField) {
+            const val = this.state[v.key];
+            
+            if (!val) {
+                button.classList.add('disabled');
+                break;
+            } else {
+                button.classList.remove('disabled');
+            }
+        }
+    }
+
     handleChange(e) {
         this.setState({
-            [e.target.name]: e.target.value
-        });
+            [e.target.name]: modifyName(e.target.value)
+        }, this.error);
     }
 
     handleBack(e) {
@@ -77,19 +101,19 @@ class TaskNew extends Component {
 
                     <div className="input-field col s12">
                         <select name="_category" onChange={this.handleChange}>
-                            <option value="" disabled selected>Choose Task Category</option>
+                            <option value="" disabled>Choose Task Category</option>
                             {this.renderTaskCategories()}
                         </select>
                         <label>Categories</label>
                     </div>
 
-                    <div className="col s12">
+                    <div className="input-field col s12">
                         <button className="red btn-flat left white-text" onClick={this.handleBack}>
                             Back
                             <i className="material-icons left">arrow_back</i>
                         </button>
 
-                        <button className="btn waves-effect waves-light right" type="submit" onClick={this.handleSubmit}>
+                        <button className="btn waves-effect waves-light right disabled" type="submit" onClick={this.handleSubmit}>
                             Submit
                             <i className="material-icons right">send</i>
                         </button>
