@@ -46,10 +46,11 @@ class CollapsibleBody extends Component {
                             <p>Total: {totalTimeHuman(v.total, 3)}</p>
                         </div>
                         <div className="card-action">
-                            <button className="btn waves-effect waves-light" onClick={this.handleStart.bind(this, v._id, v._category)}>
+                            <button className="btn waves-effect waves-light" style={{ 'marginRight': '24px' }} onClick={this.handleStart.bind(this, v._id, v._category)}>
                                 {this.detectState(v.state)}
                             </button>
-                            <div className="right white-text">{this.logStart(v.start)}</div>
+                            <Link to={'/task/view/' + v._id}>Logs</Link>
+                            <div className="white-text">{this.logStart(v.start)}</div>
                         </div>
                     </div>
                 </div>
