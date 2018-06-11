@@ -7,7 +7,7 @@ class Login extends Component {
     }
 
     checkLogin() {
-        if (this.props.auth) {
+        if (this.props.auth.data) {
             this.props.history.push('/');
         }
     }

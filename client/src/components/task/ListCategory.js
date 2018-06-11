@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
-import { Link } from 'react-router-dom';
-import totalTimeHuman from '../../utils/totalTimeHuman';
-import humanDate from 'human-date';
+
+import CollapsibleBody from './CollapsibleBody';
+import Loading from '../Loading';
 
 import M from 'materialize-css/dist/js/materialize.min.js';
 
@@ -13,11 +13,6 @@ class ListCategory extends Component {
 
         this.handleDeleteSubmit = this.handleDeleteSubmit.bind(this);
         this.state = { catId: '' };
-    }
-
-    handleDeleteSubmit(e) {
-        const id = e.target.previousSibling.getAttribute('data');
-        this.props.deleteTaskCategory(id);
     }
 
     componentWillMount() {
@@ -32,9 +27,9 @@ class ListCategory extends Component {
         const catId = item.getAttribute('data');
         const catName = item.getAttribute('name');
 
-        this.props.fetchTasksByCategory(catName, catId);
-
         this.setState({ catId });
+
+        this.props.fetchTasksByCategory(catName, catId);
     }
 
     handleOpenCollapsible() {
@@ -45,68 +40,16 @@ class ListCategory extends Component {
         });
     }
 
-    handleStart(_task, _category, e) {
-        e.target.classList.add('disabled');
-        e.preventDefault();
-
-        const button = e.target;
-
-        this.props.submitTaskLog({ _task, _category, button });
-    }
-
-    detectState(state) {
-        return state === 'end' ? 'START' : 'STOP';
-    }
-
-    logStart(date) {
-        return date ? humanDate.relativeTime(new Date(date)) : '00:00:00';
-    }
-
-    renderCollapsibleBody(id) {
-        if (id === this.state.catId) {
-            if (this.props.tasksByCategory.length === 0) {
-                return (
-                    <div className="col s12">
-                        There is no task for this category please &nbsp;
-                        <Link to="/task/new">
-                            create task
-                        </Link>
-                    </div>
-                );
-            }
-
-            return this.props.tasksByCategory.map((v) => {
-                if (this.props.task._id === v._id) {
-                    v = this.props.task;
-                }
-
-                return (
-                    <div className="col s12 m6" key={v._id}>
-                        <div className="card blue-grey darken-1">
-                            <div className="card-content white-text">
-                                <span className="card-title">
-                                    {v.name}
-                                </span>
-                                <p>{v.description}</p>
-                                <p>Total: {totalTimeHuman(v.total, 3)}</p>
-                            </div>
-                            <div className="card-action">
-                                <button className="btn waves-effect waves-light" onClick={this.handleStart.bind(this, v._id, v._category)}>
-                                    {this.detectState(v.state)}
-                                </button>
-                                <div className="right white-text">{this.logStart(v.start)}</div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            });
-        }
-
-        return;
+    handleDeleteSubmit(e) {
+        const id = e.target.previousSibling.getAttribute('data');
+        this.props.deleteTaskCategory(id);
     }
 
     renderContent() {
         return this.props.taskCategories.map((v) => {
+            const cond1 = v._id === this.state.catId;
+            const cond2 = v._id === this.props.tasksByCategory.id;
+
             return (
                 <li key={v._id} data={v._id} name={v.name}>
                     <div className="collapsible-header">
@@ -117,9 +60,11 @@ class ListCategory extends Component {
                         </a>
                     </div>
                     <div className="collapsible-body">
-                        <div className="row">
-                            {this.renderCollapsibleBody(v._id)}
-                        </div>
+                        {
+                            cond1 && cond2 ?
+                                <div className="row"><CollapsibleBody /></div>
+                                : cond1 ? <Loading /> : <div></div>
+                        }
                     </div>
                 </li>
             );
@@ -128,15 +73,22 @@ class ListCategory extends Component {
 
     render() {
         return (
-            <ul className="collapsible popout no-autoinit">
-                {this.renderContent()}
-            </ul>
+            <div>
+                <div className="divider"></div>
+                <div className="section center-align">
+                    <h4>Categories</h4>
+                </div>
+                <div className="divider"></div>
+                <ul className="collapsible popout no-autoinit">
+                    {this.renderContent()}
+                </ul>
+            </div>
         );
     }
 }
 
-function mapStateToProps({ taskCategories, tasksByCategory, task }) {
-    return { taskCategories, tasksByCategory, task };
+function mapStateToProps({ taskCategories, tasksByCategory }) {
+    return { taskCategories, tasksByCategory };
 }
 
 export default connect(mapStateToProps, actions)(ListCategory);
