@@ -61,9 +61,7 @@ class ListCategory extends Component {
                     </div>
                     <div className="collapsible-body">
                         {
-                            cond1 && cond2 ?
-                                <div className="row"><CollapsibleBody /></div>
-                                : cond1 ? <Loading /> : <div></div>
+                            cond1 && cond2 ? <div className="row"><CollapsibleBody /></div> : cond1 ? <Loading /> : <div></div>
                         }
                     </div>
                 </li>

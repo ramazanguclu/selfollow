@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import totalTimeHuman from '../../utils/totalTimeHuman';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import humanDate from 'human-date';
 
 import { connect } from 'react-redux';
@@ -46,10 +46,10 @@ class CollapsibleBody extends Component {
                             <p>Total: {totalTimeHuman(v.total, 3)}</p>
                         </div>
                         <div className="card-action">
-                            <button className="btn waves-effect waves-light" style={{ 'marginRight': '24px' }} onClick={this.handleStart.bind(this, v._id, v._category)}>
+                            <button className="btn waves-effect waves-light" onClick={this.handleStart.bind(this, v._id, v._category)}>
                                 {this.detectState(v.state)}
                             </button>
-                            <Link to={'/task/view/' + v._id}>Logs</Link>
+                            <button className="btn waves-effect right" onClick={() => this.props.history.push('/task/view/' + v._id)}>Logs</button>
                             <div className="white-text">{this.logStart(v.start)}</div>
                         </div>
                     </div>
@@ -74,5 +74,5 @@ function mapStateToProps({ tasksByCategory }) {
     return { tasksByCategory };
 }
 
-export default connect(mapStateToProps, actions)(CollapsibleBody);
+export default connect(mapStateToProps, actions)(withRouter(CollapsibleBody));
 

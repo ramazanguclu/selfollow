@@ -37,10 +37,10 @@ class App extends Component {
         const id = this.state.id;
 
         return (
-            <div className="container">
-                <BrowserRouter>
-                    <div>
-                        <Header />
+            <BrowserRouter>
+                <div>
+                    <Header />
+                    <div className="container">
                         <Switch>
                             <Route exact path="/login" component={Login} />
 
@@ -56,8 +56,8 @@ class App extends Component {
                             <Route component={NotFound} />
                         </Switch>
                     </div>
-                </BrowserRouter>
-            </div>
+                </div>
+            </BrowserRouter>
         );
     }
 }

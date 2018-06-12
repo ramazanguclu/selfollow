@@ -12,9 +12,8 @@ class Header extends Component {
     listNavBar() {
         return (
             <div>
+                <li><Link to={this.props.auth.data ? '/task/new' : '/login'} className="btn">Task Create</Link></li>
                 {this.renderContent()}
-                <li><Link to={this.props.auth.data ? '/dictionary' : '/login'}>Dictionary</Link></li>
-                <Link to={this.props.auth.data ? '/task/new' : '/login'} className="btn">Task Create</Link>
             </div>
         );
     }
@@ -23,20 +22,19 @@ class Header extends Component {
         return (
             <div>
                 <nav className="teal lighten-2">
-                    <div className="nav-wrapper">
-                        <Link to={this.props.auth.data ? '/' : '/login'} className="brand-logo right">Selfollow</Link>
-                        <a data-target="mobile-nav" className="sidenav-trigger">
-                            <i className="material-icons">menu</i>
-                        </a>
-                        <ul className="left hide-on-med-and-down">
+                    <div className="nav-wrapper container">
+                        <Link to={this.props.auth.data ? '/' : '/login'} className="brand-logo">Selfollow</Link>
+                        <ul className="right hide-on-med-and-down">
                             {this.listNavBar()}
                         </ul>
+                        <ul className="sidenav" id="nav-mobile">
+                            {this.listNavBar()}
+                        </ul>
+                        <a href="" data-target="nav-mobile" className="sidenav-trigger">
+                            <i className="material-icons">menu</i>
+                        </a>
                     </div>
                 </nav>
-
-                <ul className="sidenav teal lighten-2" id="mobile-nav">
-                    {this.listNavBar()}
-                </ul>
             </div>
         );
     }
