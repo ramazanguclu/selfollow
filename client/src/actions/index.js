@@ -1,5 +1,15 @@
 import axios from 'axios';
-import { FETCH_USER, FETCH_WORD_GROUPS, FETCH_DICTIONARY_WORDS, FETCH_TASK_CATEGORIES, FETCH_TASKS, FETCH_TASKS_BY_CATEGORY, FETCH_WORKING_TASKS } from './types';
+import {
+    FETCH_USER,
+    FETCH_WORD_GROUPS,
+    FETCH_DICTIONARY_WORDS,
+    FETCH_TASK_CATEGORIES,
+    FETCH_TASKS,
+    FETCH_TASKS_BY_CATEGORY,
+    FETCH_WORKING_TASKS,
+    FETCH_TASK,
+    FETCH_LOGS
+} from './types';
 
 export const fetchUser = (id) => async (dispatch) => {
     const res = await axios.get('/api/current_user');
@@ -150,6 +160,25 @@ export const fetchWorkingTask = () => async (dispatch) => {
 
     dispatch({
         type: FETCH_WORKING_TASKS,
+        payload: res.data
+    });
+};
+
+export const fetchTask = (id) => async (dispatch) => {
+    const res = await axios.get('/api/task/' + id);
+
+    dispatch({
+        type: FETCH_TASK,
+        payload: res.data
+    });
+};
+
+export const fetchLogs = (taskId) => async (dispatch) => {
+    const res = await axios.get('/api/log/list/' + taskId);
+
+    dispatch({
+        id: taskId,
+        type: FETCH_LOGS,
         payload: res.data
     });
 };

@@ -9,6 +9,7 @@ import Dictionary from './dictionary/Dictionary';
 import DictionaryWords from './dictionary/DictionaryWords';
 import WordNew from './dictionary/word/WordNew';
 import WordUpdate from './dictionary/word/WordUpdate';
+import TaskView from './task/TaskView';
 import Login from './Login';
 import NotFound from './NotFound';
 
@@ -36,15 +37,16 @@ class App extends Component {
         const id = this.state.id;
 
         return (
-            <div className="container">
-                <BrowserRouter>
-                    <div>
-                        <Header />
+            <BrowserRouter>
+                <div>
+                    <Header />
+                    <div className="container">
                         <Switch>
                             <Route exact path="/login" component={Login} />
 
                             <Route exact path="/" component={Restricted(Main, id)} />
                             <Route exact path="/task/new" component={Restricted(TaskNew, id)} />
+                            <Route exact path="/task/view/:id" component={Restricted(TaskView, id)} />
 
                             <Route exact path="/dictionary" component={Restricted(Dictionary, id)} />
                             <Route exact path="/dictionary/words/:groupName/:group_id" component={Restricted(DictionaryWords, id)} />
@@ -54,8 +56,8 @@ class App extends Component {
                             <Route component={NotFound} />
                         </Switch>
                     </div>
-                </BrowserRouter>
-            </div>
+                </div>
+            </BrowserRouter>
         );
     }
 }

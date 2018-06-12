@@ -7,6 +7,7 @@ import taskReducer from './taskReducer';
 import taskByCategoryReducer from './taskByCategoryReducer';
 import taskByIdReducer from './taskByIdReducer';
 import taskWorkingReducer from './taskWorkingReducer';
+import taskLogReducer from './taskLogReducer';
 import { reducer as reduxForm } from 'redux-form';
 
 export default combineReducers({
@@ -18,5 +19,6 @@ export default combineReducers({
     tasksByCategory: taskByCategoryReducer,
     task: taskByIdReducer,
     workingTasks: taskWorkingReducer,
+    taskLogs: taskLogReducer,
     form: reduxForm
 });

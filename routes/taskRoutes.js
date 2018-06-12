@@ -129,6 +129,7 @@ module.exports = app => {
         res.send(await TaskLog.find({ _task: req.params.taskid }));
     });
 
+    //task log update
     const updateTasklogState = async (taskId, currentState, nextState) => {
 
         const log = await TaskLog.findOne({

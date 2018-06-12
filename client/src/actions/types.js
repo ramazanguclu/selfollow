@@ -5,4 +5,5 @@ export const FETCH_DICTIONARY_WORDS = 'fetch_dictionary_words';
 export const FETCH_TASKS = 'fetch_tasks';
 export const FETCH_TASKS_BY_CATEGORY = 'fetch_tasks_by_category';
 export const FETCH_TASK = 'fetch_task';
-export const FETCH_WORKING_TASKS = 'fetch_working_tasks'; 
+export const FETCH_WORKING_TASKS = 'fetch_working_tasks';
+export const FETCH_LOGS = 'fetch_logs';
