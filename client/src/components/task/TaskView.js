@@ -2,29 +2,34 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import Loading from '../Loading';
-import humanDate from 'human-date';
 import totalTimeHuman from '../../utils/totalTimeHuman';
 import { withRouter } from 'react-router-dom';
+import { startLog, detectState, datePretty } from '../../utils/viewHumanDate';
 
 class TaskView extends Component {
-    constructor(props) {
-        super(props);
-
+    componentDidMount() {
         this.props.fetchTask(this.props.match.params.id);
         this.props.fetchLogs(this.props.match.params.id);
     }
 
-    datePretty(ms) {
-        return !ms ? 'in progress' : humanDate.prettyPrint(new Date(ms), { showTime: true });
+    handleStart(data, _type, e) {
+        e.target.classList.add('disabled');
+        e.preventDefault();
+
+        const _task = data._id;
+        const _category = data._category;
+        const button = e.target;
+
+        this.props.submitTaskLog({ _task, _category, button, _type });
     }
 
     contentLogs() {
-        return this.props.taskLogs.data.map(v => {
+        return this.props.taskLogs.data.reverse().map(v => {
             return (
                 <tr key={v._id}>
-                    <td>{this.datePretty(v.start)}</td>
-                    <td>{this.datePretty(v.end)}</td>
-                    <td>{totalTimeHuman(v.duration, 3)}</td>
+                    <td>{datePretty(v.start)}</td>
+                    <td>{datePretty(v.end)}</td>
+                    <td>{totalTimeHuman(v.duration, 3) || startLog(v.start)}</td>
                 </tr>
             );
         });
@@ -41,7 +46,7 @@ class TaskView extends Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {this.props.taskLogs.id === this.props.task._id ?
+                    {this.props.taskLogs.id === this.props.match.params.id ?
                         this.contentLogs() :
                         <tr>
                             <th><Loading /></th>
@@ -64,6 +69,8 @@ class TaskView extends Component {
                     <div className="card-panel blue-grey lighten-1 z-depth-2 white-text">
                         <h1>{task.name}</h1>
                         <p className="flow-text">{task.description}</p>
+                        <p>{'Total: ' + totalTimeHuman(task.total, 3)}</p>
+                        <button className="btn waves-effect waves-light" onClick={this.handleStart.bind(this, task, 'singleTask')}>{detectState(task.state)}</button>
                     </div>
                 }
 

@@ -124,9 +124,13 @@ module.exports = app => {
         res.send(log);
     });
 
+    const logListByTask = (id) => {
+        return TaskLog.find({ _task: id });
+    };
+
     //task log list
     app.get('/api/log/list/:taskid', requireLogin, async (req, res) => {
-        res.send(await TaskLog.find({ _task: req.params.taskid }));
+        res.send(await logListByTask(req.params.taskid));
     });
 
     //task log update
@@ -160,7 +164,7 @@ module.exports = app => {
 
     //task log create
     app.post('/api/log/new', requireLogin, async (req, res) => {
-        const { _task, _category } = req.body;
+        const { _task, _category, _type } = req.body;
 
         try {
             const { state } = await taskById(_task);
@@ -177,12 +181,13 @@ module.exports = app => {
                     _user: req.user._id
                 }).save();
 
-                res.send(await getTaskByCategory(req.user._id, _category));
+                _type !== 'singleTask' ? res.send(await getTaskByCategory(req.user._id, _category)) : res.send(await logListByTask(_task));
+
             } else {
                 await updateTaskState(_task, 'end');
                 await updateTasklogState(_task, 'start', 'end');
 
-                res.send(await getTaskByCategory(req.user._id, _category));
+                _type !== 'singleTask' ? res.send(await getTaskByCategory(req.user._id, _category)) : res.send(await logListByTask(_task));
             }
         } catch (error) {
             console.log(error);
