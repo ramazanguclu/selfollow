@@ -4,8 +4,10 @@ import * as actions from '../../actions';
 
 import CollapsibleBody from './CollapsibleBody';
 import Loading from '../Loading';
+import Modal from '../Modal';
 
 import M from 'materialize-css/dist/js/materialize.min.js';
+const textDeleteCategory = 'All tasks and logs which belong this category will be deleted!';
 
 class ListCategory extends Component {
     constructor(props) {
@@ -40,9 +42,8 @@ class ListCategory extends Component {
         });
     }
 
-    handleDeleteSubmit(e) {
-        const id = e.target.previousSibling.getAttribute('data');
-        this.props.deleteTaskCategory(id);
+    handleDeleteSubmit() {
+        this.props.deleteTaskCategory(this.state.catId);
     }
 
     renderContent() {
@@ -53,13 +54,12 @@ class ListCategory extends Component {
             return (
                 <li key={v._id} data={v._id} name={v.name}>
                     <div className="collapsible-header">
-                        <div style={{ width: '100%' }}>{v.name}</div>
-                        <a onClick={this.handleDeleteSubmit} className="secondary-content">
-                            <input data={v._id} type="hidden" />
-                            <i className="material-icons">delete</i>
-                        </a>
+                        <div>{v.name}</div>
                     </div>
                     <div className="collapsible-body">
+                        <div className="row">
+                            <button data-target="modal1" className="btn modal-trigger">Delete This Category</button>
+                        </div>
                         {
                             cond1 && cond2 ? <div className="row"><CollapsibleBody /></div> : cond1 ? <Loading /> : <div></div>
                         }
@@ -72,6 +72,7 @@ class ListCategory extends Component {
     render() {
         return (
             <div>
+                <Modal modalId="modal1" agree={this.handleDeleteSubmit} text={textDeleteCategory} />
                 <div className="divider"></div>
                 <div className="section center-align">
                     <h4>Categories</h4>

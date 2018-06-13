@@ -40,6 +40,9 @@ module.exports = app => {
 
         try {
             await TaskCategory.findByIdAndRemove(deleteId);
+            await Task.remove({ _category: deleteId });
+            await TaskLog.remove({_category: deleteId});
+
             res.send(await getTaskCategories(req.user.id));
         } catch (err) {
             res.status(422);
