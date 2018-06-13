@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
 import totalTimeHuman from '../../utils/totalTimeHuman';
 import { Link, withRouter } from 'react-router-dom';
-import humanDate from 'human-date';
+import { startLog, detectState } from '../../utils/viewHumanDate';
 
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
 
 class CollapsibleBody extends Component {
-    detectState(state) {
-        return state === 'end' ? 'START' : 'STOP';
-    }
-
-    logStart(date) {
-        return date ? humanDate.relativeTime(new Date(date)) : '00:00:00';
-    }
-
     handleStart(_task, _category, e) {
         e.target.classList.add('disabled');
         e.preventDefault();
@@ -47,10 +39,10 @@ class CollapsibleBody extends Component {
                         </div>
                         <div className="card-action">
                             <button className="btn waves-effect waves-light" onClick={this.handleStart.bind(this, v._id, v._category)}>
-                                {this.detectState(v.state)}
+                                {detectState(v.state)}
                             </button>
                             <button className="btn waves-effect right" onClick={() => this.props.history.push('/task/view/' + v._id)}>Logs</button>
-                            <div className="white-text">{this.logStart(v.start)}</div>
+                            <div className="white-text">{startLog(v.start)}</div>
                         </div>
                     </div>
                 </div>

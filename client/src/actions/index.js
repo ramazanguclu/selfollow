@@ -141,16 +141,19 @@ export const fetchTasksByCategory = (categoryName, categoryId) => async (dispatc
     });
 };
 
-export const submitTaskLog = ({ _task, _category, button }) => async (dispatch) => {
-    const res = await axios.post('/api/log/new', { _task, _category });
+export const submitTaskLog = ({ _task, _category, button, _type }) => async (dispatch) => {
+    const res = await axios.post('/api/log/new', { _task, _category, _type });
 
     if (res.status === 200 && res.statusText === 'OK') {
         button.classList.remove('disabled');
     }
 
+    const id = (_type !== 'singleTask') ? _category : _task;
+    const type = (_type !== 'singleTask') ? FETCH_TASKS_BY_CATEGORY : FETCH_LOGS;
+
     dispatch({
-        id: _category,
-        type: FETCH_TASKS_BY_CATEGORY,
+        id,
+        type,
         payload: res.data
     });
 };
