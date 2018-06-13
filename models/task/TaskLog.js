@@ -6,9 +6,9 @@ const taskLogSchema = new Schema({
     end: { type: Number, default: 0 },
     duration: { type: Number, default: 0 },
     state: { type: String, default: 'end' },
-    _user: { type: Schema.Types.ObjectId, ref: 'User' },
-    _task: { type: Schema.Types.ObjectId, ref: 'Task' },
-    _category: { type: Schema.Types.ObjectId, ref: 'TaskCategory' }
+    _user: { type: Schema.Types.ObjectId, ref: 'users' },
+    _task: { type: Schema.Types.ObjectId, ref: 'tasks' },
+    _category: { type: Schema.Types.ObjectId, ref: 'taskCategories' }
 }, { versionKey: false });
 
 mongoose.model('taskLogs', taskLogSchema);
