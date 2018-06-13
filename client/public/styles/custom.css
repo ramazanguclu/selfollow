@@ -1,0 +1,7 @@
+.brand-logo {
+    padding: 0 10px !important;
+}
+
+.brand-logo:hover {
+    color:#000;
+}

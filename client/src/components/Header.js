@@ -23,7 +23,7 @@ class Header extends Component {
             <div>
                 <nav className="teal lighten-2">
                     <div className="nav-wrapper container">
-                        <Link to={this.props.auth.data ? '/' : '/login'} className="brand-logo">Selfollow</Link>
+                        <Link to={this.props.auth.data ? '/' : '/login'} className="teal darken-1 scale-transition brand-logo">Selfollow</Link>
                         <ul className="right hide-on-med-and-down">
                             {this.listNavBar()}
                         </ul>
