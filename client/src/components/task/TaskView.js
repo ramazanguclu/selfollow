@@ -60,7 +60,8 @@ class TaskView extends Component {
     }
 
     render() {
-        const task = this.props.task;
+        const taskLog = this.props.taskLogs.data[0];
+        const task = taskLog && taskLog['_task'] || this.props.task;
 
         return (
             <div>

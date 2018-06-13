@@ -124,13 +124,13 @@ module.exports = app => {
         res.send(log);
     });
 
-    const logListByTask = (id) => {
-        return TaskLog.find({ _task: id });
+    const logListWithTask = (id) => {
+        return TaskLog.find({ _task: id }).populate('_task');
     };
 
     //task log list
     app.get('/api/log/list/:taskid', requireLogin, async (req, res) => {
-        res.send(await logListByTask(req.params.taskid));
+        res.send(await logListWithTask(req.params.taskid));
     });
 
     //task log update
@@ -181,13 +181,13 @@ module.exports = app => {
                     _user: req.user._id
                 }).save();
 
-                _type !== 'singleTask' ? res.send(await getTaskByCategory(req.user._id, _category)) : res.send(await logListByTask(_task));
+                _type !== 'singleTask' ? res.send(await getTaskByCategory(req.user._id, _category)) : res.send(await logListWithTask(_task));
 
             } else {
                 await updateTaskState(_task, 'end');
                 await updateTasklogState(_task, 'start', 'end');
 
-                _type !== 'singleTask' ? res.send(await getTaskByCategory(req.user._id, _category)) : res.send(await logListByTask(_task));
+                _type !== 'singleTask' ? res.send(await getTaskByCategory(req.user._id, _category)) : res.send(await logListWithTask(_task));
             }
         } catch (error) {
             console.log(error);
