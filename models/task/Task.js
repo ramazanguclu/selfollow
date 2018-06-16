@@ -5,7 +5,7 @@ const taskSchema = new Schema({
     name: String,
     state: { type: String, default: 'end' },
     description: { type: String, default: '' },
-    start: { type: Number, default: 0 },
+    startDate: { type: Date, default: null },
     _category: { type: Schema.Types.ObjectId, ref: 'taskCategories' },
     _user: { type: Schema.Types.ObjectId, ref: 'users' },
     total: { type: Number, default: 0 },

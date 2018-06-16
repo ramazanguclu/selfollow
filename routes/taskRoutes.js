@@ -41,7 +41,7 @@ module.exports = app => {
         try {
             await TaskCategory.findByIdAndRemove(deleteId);
             await Task.remove({ _category: deleteId });
-            await TaskLog.remove({_category: deleteId});
+            await TaskLog.remove({ _category: deleteId });
 
             res.send(await getTaskCategories(req.user.id));
         } catch (err) {
@@ -68,10 +68,10 @@ module.exports = app => {
         return Task.findById(id);
     };
 
-    const updateTaskState = (id, state, startDate = 0) => {
+    const updateTaskState = (id, state, time) => {
         return Task.findByIdAndUpdate(id, {
             state: state,
-            start: startDate
+            startDate: time
         });
     };
 
@@ -138,13 +138,12 @@ module.exports = app => {
 
     //task log update
     const updateTasklogState = async (taskId, currentState, nextState) => {
-
         const log = await TaskLog.findOne({
             _task: taskId,
             state: currentState
         });
 
-        const dur = (new Date()).getTime() - log.start;
+        const dur = new Date() - log.startDate;
 
         try {
             await updateTotalLog(taskId, dur);
@@ -156,7 +155,7 @@ module.exports = app => {
                 },
                 {
                     state: nextState,
-                    end: (new Date()).getTime(),
+                    endDate: new Date(),
                     duration: dur
                 }
             );
@@ -173,29 +172,56 @@ module.exports = app => {
             const { state } = await taskById(_task);
 
             if (state === 'end') {
-                const dateStart = (new Date()).getTime();
-                await updateTaskState(_task, 'start', dateStart);
+                await updateTaskState(_task, 'start', new Date());
 
                 await new TaskLog({
-                    start: (new Date()).getTime(),
+                    startDate: new Date(),
                     state: 'start',
                     _task,
                     _category,
                     _user: req.user._id
                 }).save();
-
-                _type !== 'singleTask' ? res.send(await getTaskByCategory(req.user._id, _category)) : res.send(await logListWithTask(_task));
-
             } else {
-                await updateTaskState(_task, 'end');
+                await updateTaskState(_task, 'end', null);
                 await updateTasklogState(_task, 'start', 'end');
-
-                _type !== 'singleTask' ? res.send(await getTaskByCategory(req.user._id, _category)) : res.send(await logListWithTask(_task));
             }
+
+            _type !== 'singleTask' ?
+                res.send(await getTaskByCategory(req.user._id, _category)) :
+                res.send(await logListWithTask(_task));
         } catch (error) {
             console.log(error);
             res.status(422).send({ status: 'error' });
         }
+    });
+
+    app.get('/api/log/total/:type', async (req, res) => {
+        let response = [];
+
+        const type = req.params.type;
+
+        if (type === 'daily') {
+            response = await TaskLog.aggregate([
+                {
+                    $match: {
+                        _user: req.user._id,
+                        $or: [
+                            { _task: mongoose.Types.ObjectId(req.query.taskId) },
+                            { _category: mongoose.Types.ObjectId(req.query.catId) }
+                        ]
+                    },
+                },
+                {
+                    $group: {
+                        _id: { month: { $month: '$startDate' }, day: { $dayOfMonth: '$startDate' }, year: { $year: '$startDate' } },
+                        total: { $sum: '$duration' },
+                        count: { $sum: 1 }
+                    }
+                }
+            ]);
+        }
+
+        res.send(response);
     });
     //endregion
 };

@@ -27,9 +27,9 @@ class TaskView extends Component {
         return this.props.taskLogs.data.reverse().map(v => {
             return (
                 <tr key={v._id}>
-                    <td>{datePretty(v.start)}</td>
-                    <td>{datePretty(v.end)}</td>
-                    <td>{totalTimeHuman(v.duration, 3) || startLog(v.start)}</td>
+                    <td>{datePretty(v.startDate)}</td>
+                    <td>{datePretty(v.endDate)}</td>
+                    <td>{totalTimeHuman(v.duration, 3) || startLog(v.startDate)}</td>
                 </tr>
             );
         });

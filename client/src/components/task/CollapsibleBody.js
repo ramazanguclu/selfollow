@@ -42,7 +42,7 @@ class CollapsibleBody extends Component {
                                 {detectState(v.state)}
                             </button>
                             <button className="btn waves-effect right" onClick={() => this.props.history.push('/task/view/' + v._id)}>Logs</button>
-                            <div className="white-text">{startLog(v.start)}</div>
+                            <div className="white-text">{startLog(v.startDate)}</div>
                         </div>
                     </div>
                 </div>
