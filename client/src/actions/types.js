@@ -7,3 +7,4 @@ export const FETCH_TASKS_BY_CATEGORY = 'fetch_tasks_by_category';
 export const FETCH_TASK = 'fetch_task';
 export const FETCH_WORKING_TASKS = 'fetch_working_tasks';
 export const FETCH_LOGS = 'fetch_logs';
+export const FETCH_LOG_STATISTICS = 'fetch_log_statistics';

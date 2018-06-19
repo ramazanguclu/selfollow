@@ -92,7 +92,7 @@ module.exports = app => {
     });
 
     //task list by category id
-    app.get('/api/tasks/:categoryName/:categoryId', async (req, res) => {
+    app.get('/api/tasks/category/:categoryId', async (req, res) => {
         res.send(await getTaskByCategory(req.user.id, req.params.categoryId));
     });
 
@@ -195,10 +195,19 @@ module.exports = app => {
         }
     });
 
-    app.get('/api/log/total/:type', async (req, res) => {
+    app.get('/api/log/statistic/:type', async (req, res) => {
         let response = [];
+        let taskId, catId;
 
         const type = req.params.type;
+
+        if (req.query.taskId) {
+            taskId = mongoose.Types.ObjectId(req.query.taskId);
+        }
+
+        else if (req.query.catId) {
+            catId = mongoose.Types.ObjectId(req.query.catId);
+        }
 
         if (type === 'daily') {
             response = await TaskLog.aggregate([
@@ -206,8 +215,8 @@ module.exports = app => {
                     $match: {
                         _user: req.user._id,
                         $or: [
-                            { _task: mongoose.Types.ObjectId(req.query.taskId) },
-                            { _category: mongoose.Types.ObjectId(req.query.catId) }
+                            { _task: taskId },
+                            { _category: catId }
                         ]
                     },
                 },
