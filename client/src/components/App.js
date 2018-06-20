@@ -10,7 +10,7 @@ import DictionaryWords from './dictionary/DictionaryWords';
 import WordNew from './dictionary/word/WordNew';
 import WordUpdate from './dictionary/word/WordUpdate';
 import TaskView from './task/TaskView';
-import Statistics from './task/Statistics';
+import Statistics from './task/logStatistic/Statistic';
 import Login from './Login';
 import NotFound from './NotFound';
 

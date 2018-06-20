@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import * as actions from '../../actions';
+import * as actions from '../../../actions';
 import M from 'materialize-css/dist/js/materialize.min.js';
-import totalTimeHuman from '../../utils/totalTimeHuman';
-import Loading from '../Loading';
 
 const statisticType = ['daily', 'monthly', 'yearly'];
 
-class Statictics extends Component {
+class FilterStatisticForm extends Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.state = { _category: '', _type: 'daily' };
+        this.handleFilter = this.handleFilter.bind(this);
+
+        this.state = { _type: 'daily', _category: '', filter: '_category' };
     }
 
     componentWillMount() {
@@ -58,48 +58,59 @@ class Statictics extends Component {
         });
     }
 
+    getTaskByCategory(id) {
+        if (!id) {
+            return;
+        }
+
+        this.props.fetchTasksByCategory(id);
+    }
+
     handleChange(e) {
         const name = e.target.name;
         const value = e.target.value;
 
-        if ('_category' === name) {
-            this.props.fetchTasksByCategory(value);
+        if (name === '_category') {
+            this.getTaskByCategory(value);
         }
+        const text = e.target.options[e.target.selectedIndex]['text'];
 
         this.setState({
-            [name]: value
+            [name]: value,
+            [name + 'Text']: text
+        }, () => {
+            console.log(this.state);
         });
+    }
+
+    handleFilter(e) {
+        const filter = e.target.getAttribute('data');
+
+        if (filter === 'task') {
+            this.setState({ filter: '_task' });
+            this.getTaskByCategory(this.state._category);
+            document.getElementById('_task_select').classList.remove('hide');
+        } else {
+            this.setState({ filter: '_category', _task: '' });
+            document.querySelector('[name=_task]').selectedIndex = 0;
+            document.getElementById('_task_select').classList.add('hide');
+        }
+    }
+
+    modifyTitle(cat, task) {
+        return (cat ? 'Category: ' + cat : '') + '  ' + (task ? 'Task: ' + task : '');
     }
 
     handleSubmit(e) {
         e.preventDefault();
 
-        if (!this.state._category) {
-            return;
-        }
+        if (!this.state._category) return;
 
+        let catText = this.state._categoryText;
+        let taskText = this.state._taskText;
+
+        this.props.handleSubmit(this.modifyTitle(catText, taskText));
         this.props.fetchLogStatistics(this.state);
-    }
-
-    renderStatisticItem() {
-        return this.props.logStatistics.data.map((v, k) => {
-            return (
-                <li key={k} className="collection-item">
-                    <p className="title">{v._id.day + '-' + v._id.month + '-' + v._id.year}</p>
-                    <p className="title">{totalTimeHuman(v.total, 3)}</p>
-
-                </li>
-            );
-        });
-    }
-
-    renderStatistics() {
-        return (
-            <ul className="collection with-header">
-                <li className="collection-header"><h4>First Names</h4></li>
-                {this.renderStatisticItem()}
-            </ul>
-        );
     }
 
     renderForm() {
@@ -114,17 +125,35 @@ class Statictics extends Component {
                         <label>Types</label>
                     </div>
 
+
+                    <div className="input-field col s12">
+                        <div className="divider"></div>
+                        <p>
+                            <label>
+                                <input className="with-gap" name="filter" type="radio" data="category" defaultChecked onChange={this.handleFilter} />
+                                <span>Filter By Category</span>
+                            </label>
+                        </p>
+                        <p>
+                            <label>
+                                <input className="with-gap" name="filter" type="radio" data="task" onChange={this.handleFilter} />
+                                <span>Filter By Task</span>
+                            </label>
+                        </p>
+                        <div className="divider"></div>
+                    </div>
+
                     <div className="input-field col s12">
                         <select name="_category" onChange={this.handleChange}>
-                            <option value="" disabled>Choose Task Category</option>
+                            <option value="" >Choose Task Category</option>
                             {this.renderTaskCategories()}
                         </select>
                         <label>Categories</label>
                     </div>
 
-                    <div className="input-field col s12">
+                    <div id="_task_select" className="input-field col s12 hide">
                         <select name="_task" onChange={this.handleChange}>
-                            <option value="" disabled>Choose Task By Category</option>
+                            <option value="">Choose Task By Category</option>
                             {this.renderTaskByCategories()}
                         </select>
                         <label>Tasks</label>
@@ -141,8 +170,6 @@ class Statictics extends Component {
                             <i className="material-icons right">done</i>
                         </button>
                     </div>
-
-                    {this.renderStatistics()}
 
                 </form>
             </div>
@@ -162,4 +189,4 @@ function mapStateToProps({ taskCategories, tasksByCategory, logStatistics }) {
     return { taskCategories, tasksByCategory, logStatistics };
 }
 
-export default connect(mapStateToProps, actions)(withRouter(Statictics));
+export default connect(mapStateToProps, actions)(withRouter(FilterStatisticForm));
