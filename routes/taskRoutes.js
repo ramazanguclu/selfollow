@@ -209,7 +209,7 @@ module.exports = app => {
             catId = mongoose.Types.ObjectId(req.query.catId);
         }
 
-        if (type === 'daily') {
+        if (type && (catId || taskId)) {
             response = await TaskLog.aggregate([
                 {
                     $match: {
@@ -222,7 +222,32 @@ module.exports = app => {
                 },
                 {
                     $group: {
-                        _id: { month: { $month: '$startDate' }, day: { $dayOfMonth: '$startDate' }, year: { $year: '$startDate' } },
+                        _id:
+                        {
+                            $switch:
+                            {
+                                branches: [
+                                    {
+                                        case: type === 'monthly',
+                                        then: {
+                                            month: { $month: '$startDate' },
+                                            year: { $year: '$startDate' }
+                                        }
+                                    },
+                                    {
+                                        case: type === 'yearly',
+                                        then: {
+                                            year: { $year: '$startDate' }
+                                        }
+                                    }
+                                ],
+                                default: {
+                                    day: { $dayOfMonth: '$startDate' },
+                                    month: { $month: '$startDate' },
+                                    year: { $year: '$startDate' }
+                                }
+                            }
+                        },
                         total: { $sum: '$duration' },
                         count: { $sum: 1 }
                     }

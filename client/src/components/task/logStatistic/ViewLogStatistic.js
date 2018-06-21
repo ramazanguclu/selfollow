@@ -4,25 +4,33 @@ import totalTimeHuman from '../../../utils/totalTimeHuman';
 import { connect } from 'react-redux';
 import * as actions from '../../../actions';
 
+import Loading from '../../Loading';
+
 class ViewLogStatistic extends Component {
+    modifyDate(date) {
+        return Object.values(date).join('-');
+    }
+
     renderStatisticItem() {
         return this.props.logStatistics.data.map((v, k) => {
             return (
                 <li key={k} className="collection-item">
-                    <p className="title">{v._id.day + '-' + v._id.month + '-' + v._id.year}</p>
-                    <p className="title">{totalTimeHuman(v.total, 3)}</p>
-
+                    <div>
+                        {this.modifyDate(v._id)}
+                        <a className="secondary-content">{totalTimeHuman(v.total, 3)}</a>
+                    </div>
                 </li>
             );
         });
     }
 
     renderStatistics() {
-        if (!this.props.show) return;
-
         return (
             <ul className="collection with-header">
-                <li className="collection-header"><h4>{this.props.title}</h4></li>
+                <li className="collection-header">
+                    <h1>{this.props.title._category}</h1>
+                    <h4>{this.props.title._task}</h4>
+                </li>
                 {this.renderStatisticItem()}
             </ul>
         );
@@ -31,14 +39,14 @@ class ViewLogStatistic extends Component {
     render() {
         return (
             <div>
-                {this.renderStatistics()}
+                {this.props.clear ? <div></div> : this.props.logId !== this.props.logStatistics.id ? <Loading /> : this.renderStatistics()}
             </div>
         );
     }
 }
 
-function mapStateToProps({ taskCategories, tasksByCategory, logStatistics }) {
-    return { taskCategories, tasksByCategory, logStatistics };
+function mapStateToProps({ logStatistics }) {
+    return { logStatistics };
 }
 
 export default connect(mapStateToProps, actions)(ViewLogStatistic);

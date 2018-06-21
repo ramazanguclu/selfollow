@@ -187,11 +187,11 @@ export const fetchLogs = (taskId) => async (dispatch) => {
     });
 };
 
-export const fetchLogStatistics = ({ _type, _category, _task = '' }) => async (dispatch) => {    
+export const fetchLogStatistics = ({ _type, _category, _task = '' }, id) => async (dispatch) => {
     const res = await axios.get('/api/log/statistic/' + _type + '?catId=' + _category + '&taskId=' + _task);
 
     dispatch({
-        id: _category + _task,
+        id,
         type: FETCH_LOG_STATISTICS,
         payload: res.data
     });

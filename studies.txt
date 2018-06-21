@@ -18,3 +18,5 @@ http://mongoosejs.com/docs/populate.html
 https://docs.mongodb.com/manual/reference/operator/aggregation/group/
 https://stackoverflow.com/questions/26800740/mongoose-group-query-in-node-js-express-route/26802632#26802632
 https://medium.freecodecamp.org/introduction-to-mongoose-for-mongodb-d2a7aa593c57
+https://docs.mongodb.com/manual/reference/operator/aggregation/cond/
+https://docs.mongodb.com/manual/reference/operator/aggregation/switch/#exp._S_switch

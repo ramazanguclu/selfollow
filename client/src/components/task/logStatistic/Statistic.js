@@ -6,13 +6,13 @@ class Statistic extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { title: '', show: false };
+        this.state = { title: '', clear: true, logId: '' };
     }
     render() {
         return (
             <div>
-                <FilterStatisticForm handleSubmit={(t) => { this.setState({ title: t,show: true }); }} />
-                <ViewLogStatistic title={this.state.title} show={this.state.show} />
+                <FilterStatisticForm handleClear={() => this.setState({ clear: true })} handleSubmit={(title, logId) => { this.setState({ title, logId, clear: false }); }} />
+                <ViewLogStatistic logId={this.state.logId} title={this.state.title} clear={this.state.clear} />
             </div>
         );
     }

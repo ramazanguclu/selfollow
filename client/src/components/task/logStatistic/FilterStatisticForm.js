@@ -12,8 +12,9 @@ class FilterStatisticForm extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleFilter = this.handleFilter.bind(this);
+        this.handleBack = this.handleBack.bind(this);
 
-        this.state = { _type: 'daily', _category: '', filter: '_category' };
+        this.state = { _type: 'daily', _category: '', filter: '_category', logId: '' };
     }
 
     componentWillMount() {
@@ -63,7 +64,16 @@ class FilterStatisticForm extends Component {
             return;
         }
 
+        this.setState({
+            _task: ''
+        });
+
         this.props.fetchTasksByCategory(id);
+    }
+
+    handleBack(e) {
+        e.preventDefault();
+        this.props.history.goBack();
     }
 
     handleChange(e) {
@@ -73,17 +83,17 @@ class FilterStatisticForm extends Component {
         if (name === '_category') {
             this.getTaskByCategory(value);
         }
+
         const text = e.target.options[e.target.selectedIndex]['text'];
 
         this.setState({
             [name]: value,
             [name + 'Text']: text
-        }, () => {
-            console.log(this.state);
         });
     }
 
     handleFilter(e) {
+        this.props.handleClear();
         const filter = e.target.getAttribute('data');
 
         if (filter === 'task') {
@@ -97,20 +107,27 @@ class FilterStatisticForm extends Component {
         }
     }
 
-    modifyTitle(cat, task) {
-        return (cat ? 'Category: ' + cat : '') + '  ' + (task ? 'Task: ' + task : '');
-    }
-
     handleSubmit(e) {
+        let title = {};
+        this.props.handleClear();
+
         e.preventDefault();
 
         if (!this.state._category) return;
 
-        let catText = this.state._categoryText;
-        let taskText = this.state._taskText;
+        title['_category'] = this.state._categoryText;
 
-        this.props.handleSubmit(this.modifyTitle(catText, taskText));
-        this.props.fetchLogStatistics(this.state);
+        if (this.state.filter === '_task') {
+            if (this.state._task) {
+                title['_task'] = this.state._taskText;
+            } else {
+                return;
+            }
+        }
+
+        const logId = this.state._category + this.state._task;
+        this.props.handleSubmit(title, logId);
+        this.props.fetchLogStatistics(this.state, logId);
     }
 
     renderForm() {
@@ -119,15 +136,6 @@ class FilterStatisticForm extends Component {
                 <form className="col s12">
 
                     <div className="input-field col s12">
-                        <select name="_type" onChange={this.handleChange}>
-                            {this.renderTypes()}
-                        </select>
-                        <label>Types</label>
-                    </div>
-
-
-                    <div className="input-field col s12">
-                        <div className="divider"></div>
                         <p>
                             <label>
                                 <input className="with-gap" name="filter" type="radio" data="category" defaultChecked onChange={this.handleFilter} />
@@ -141,6 +149,13 @@ class FilterStatisticForm extends Component {
                             </label>
                         </p>
                         <div className="divider"></div>
+                    </div>
+
+                    <div className="input-field col s12">
+                        <select name="_type" onChange={this.handleChange}>
+                            {this.renderTypes()}
+                        </select>
+                        <label>Time Period</label>
                     </div>
 
                     <div className="input-field col s12">
@@ -160,9 +175,9 @@ class FilterStatisticForm extends Component {
                     </div>
 
                     <div className="input-field col s12">
-                        <button className="red btn-flat left white-text">
-                            Clear
-                            <i className="material-icons left">clear</i>
+                        <button className="red btn-flat left white-text" onClick={this.handleBack}>
+                            Back
+                            <i className="material-icons left">arrow_back</i>
                         </button>
 
                         <button className="btn waves-effect waves-light right" type="submit" onClick={this.handleSubmit}>
