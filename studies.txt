@@ -20,3 +20,4 @@ https://stackoverflow.com/questions/26800740/mongoose-group-query-in-node-js-exp
 https://medium.freecodecamp.org/introduction-to-mongoose-for-mongodb-d2a7aa593c57
 https://docs.mongodb.com/manual/reference/operator/aggregation/cond/
 https://docs.mongodb.com/manual/reference/operator/aggregation/switch/#exp._S_switch
+https://stackoverflow.com/questions/31103624/mongodb-sort-result-of-aggregate-query-and-display-day-name

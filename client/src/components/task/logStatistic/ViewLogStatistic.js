@@ -8,7 +8,11 @@ import Loading from '../../Loading';
 
 class ViewLogStatistic extends Component {
     modifyDate(date) {
-        return Object.values(date).join('-');
+        return Object.values(date).map((v) => {
+            let substrNumber = ('' + v).length > 2 ? 4 : 2;
+    
+            return ('00' + v).substr(-substrNumber, substrNumber);
+        }).join('-');
     }
 
     renderStatisticItem() {
