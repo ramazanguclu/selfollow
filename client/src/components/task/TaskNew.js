@@ -119,7 +119,6 @@ class TaskNew extends Component {
                         </button>
                     </div>
 
-
                     {this.renderLoading()}
                 </form>
             </div>

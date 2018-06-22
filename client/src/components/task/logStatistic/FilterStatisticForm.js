@@ -3,8 +3,12 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../../../actions';
 import M from 'materialize-css/dist/js/materialize.min.js';
+import Select from '../../elements/Select';
+import RadioButton from '../../elements/RadioButton';
+import { BackButton, SubmitButton } from '../../elements/Button';
 
-const statisticType = ['daily', 'monthly', 'yearly'];
+const statisticTimePeriod = ['daily', 'monthly', 'yearly'];
+const formInputs = { type: '_type', category: '_category', task: '_task' };
 
 class FilterStatisticForm extends Component {
     constructor(props) {
@@ -14,7 +18,7 @@ class FilterStatisticForm extends Component {
         this.handleFilter = this.handleFilter.bind(this);
         this.handleBack = this.handleBack.bind(this);
 
-        this.state = { _type: 'daily', _category: '', filter: '_category', logId: '' };
+        this.state = { [formInputs.type]: statisticTimePeriod[0], [formInputs.category]: '', filter: formInputs.category, logId: '' };
     }
 
     componentWillMount() {
@@ -29,44 +33,10 @@ class FilterStatisticForm extends Component {
         M.AutoInit();
     }
 
-    renderTypes() {
-        return statisticType.map((v) => {
-            return (
-                <option key={v} value={v}>{v}</option>
-            );
-        });
-    }
-
-    renderTaskCategories() {
-        return (
-            this.props.taskCategories.map(v => {
-                return (
-                    <option key={v._id} value={v._id}>{v.name}</option>
-                );
-            })
-        );
-    }
-
-    renderTaskByCategories() {
-        if (this.props.tasksByCategory.id !== this.state._category) {
-            return;
-        }
-
-        return this.props.tasksByCategory.data.map((v) => {
-            return (
-                <option key={v._id} value={v._id}>{v.name}</option>
-            );
-        });
-    }
-
     getTaskByCategory(id) {
-        if (!id) {
-            return;
-        }
+        if (!id) return;
 
-        this.setState({
-            _task: ''
-        });
+        this.setState({ [formInputs.task]: '' });
 
         this.props.fetchTasksByCategory(id);
     }
@@ -77,115 +47,113 @@ class FilterStatisticForm extends Component {
     }
 
     handleChange(e) {
-        const name = e.target.name;
-        const value = e.target.value;
+        const elem = e.target;
+        const name = elem.name;
+        const value = elem.value;
 
-        if (name === '_category') {
+        if (name === formInputs.category) {
             this.getTaskByCategory(value);
         }
 
-        const text = e.target.options[e.target.selectedIndex]['text'];
-
         this.setState({
             [name]: value,
-            [name + 'Text']: text
+            [name + 'Text']: elem.options[elem.selectedIndex]['text']
         });
     }
 
     handleFilter(e) {
         this.props.handleClear();
         const filter = e.target.getAttribute('data');
+        const elemTaskSelect = document.querySelector('.tasks-container');
 
-        if (filter === 'task') {
-            this.setState({ filter: '_task' });
-            this.getTaskByCategory(this.state._category);
-            document.getElementById('_task_select').classList.remove('hide');
+        this.setState({ filter });
+
+        if (filter === formInputs.task) {
+            this.getTaskByCategory(this.state[formInputs.category]);
+            elemTaskSelect.classList.remove('hide');
         } else {
-            this.setState({ filter: '_category', _task: '' });
-            document.querySelector('[name=_task]').selectedIndex = 0;
-            document.getElementById('_task_select').classList.add('hide');
+            this.setState({ [formInputs.task]: '' });
+
+            elemTaskSelect.querySelector('select').selectedIndex = 0;
+            elemTaskSelect.classList.add('hide');
         }
     }
 
     handleSubmit(e) {
-        let title = {};
         this.props.handleClear();
 
         e.preventDefault();
 
-        if (!this.state._category) return;
+        if (!this.state[formInputs.category]) return;
 
-        title['_category'] = this.state._categoryText;
+        let title = {};
+        title[formInputs.category] = this.state._categoryText;
 
-        if (this.state.filter === '_task') {
-            if (this.state._task) {
-                title['_task'] = this.state._taskText;
-            } else {
-                return;
-            }
+        if (this.state.filter === formInputs.task) {
+            if (this.state[formInputs.task])
+                title[formInputs.task] = this.state._taskText;
+            else return;
         }
 
-        const logId = this.state._category + this.state._task;
+        const logId = this.state[formInputs.category] + this.state[formInputs.task];
         this.props.handleSubmit(title, logId);
         this.props.fetchLogStatistics(this.state, logId);
+    }
+
+    getRadioButtonData() {
+        return {
+            onChange: this.handleFilter,
+            name: 'filter',
+            items: [
+                { dataItem: formInputs.category, label: 'Filter By Category', defaultChecked: true },
+                { dataItem: formInputs.task, label: 'Filter By Task', defaultChecked: false }
+            ]
+        };
+    }
+
+    renderOptions(items) {
+        return items.map(v => {
+            return (
+                <option key={v._id || v} value={v._id || v}>{v.name || v}</option>
+            );
+        });
     }
 
     renderForm() {
         return (
             <div className="row">
                 <form className="col s12">
+                    <RadioButton data={this.getRadioButtonData()} />
+
+                    <Select
+                        name={formInputs.type}
+                        onChange={this.handleChange}
+                        label={'Time Period'}
+                        options={this.renderOptions(statisticTimePeriod)}
+                    />
+
+                    <Select
+                        name={formInputs.category}
+                        onChange={this.handleChange}
+                        label={'Categories'}
+                        options={this.renderOptions(this.props.taskCategories)}
+                        defaultOptionLabel={'Choose Task Category'}
+                    />
+
+                    <Select
+                        name={formInputs.task}
+                        onChange={this.handleChange}
+                        label={'Tasks'}
+                        options={this.props.tasksByCategory.id === this.state[formInputs.category] && this.renderOptions(this.props.tasksByCategory.data)}
+                        defaultOptionLabel={'Choose Task By Category'}
+                        hideClass={'hide'}
+                        customClass={'tasks-container'}
+                    />
 
                     <div className="input-field col s12">
-                        <p>
-                            <label>
-                                <input className="with-gap" name="filter" type="radio" data="category" defaultChecked onChange={this.handleFilter} />
-                                <span>Filter By Category</span>
-                            </label>
-                        </p>
-                        <p>
-                            <label>
-                                <input className="with-gap" name="filter" type="radio" data="task" onChange={this.handleFilter} />
-                                <span>Filter By Task</span>
-                            </label>
-                        </p>
-                        <div className="divider"></div>
+                        <BackButton label={'Back'} onClick={this.handleBack} />
+                        <SubmitButton label={'Statistics'} onClick={this.handleSubmit} />
                     </div>
-
-                    <div className="input-field col s12">
-                        <select name="_type" onChange={this.handleChange}>
-                            {this.renderTypes()}
-                        </select>
-                        <label>Time Period</label>
-                    </div>
-
-                    <div className="input-field col s12">
-                        <select name="_category" onChange={this.handleChange}>
-                            <option value="" >Choose Task Category</option>
-                            {this.renderTaskCategories()}
-                        </select>
-                        <label>Categories</label>
-                    </div>
-
-                    <div id="_task_select" className="input-field col s12 hide">
-                        <select name="_task" onChange={this.handleChange}>
-                            <option value="">Choose Task By Category</option>
-                            {this.renderTaskByCategories()}
-                        </select>
-                        <label>Tasks</label>
-                    </div>
-
-                    <div className="input-field col s12">
-                        <button className="red btn-flat left white-text" onClick={this.handleBack}>
-                            Back
-                            <i className="material-icons left">arrow_back</i>
-                        </button>
-
-                        <button className="btn waves-effect waves-light right" type="submit" onClick={this.handleSubmit}>
-                            Statistics
-                            <i className="material-icons right">done</i>
-                        </button>
-                    </div>
-
                 </form>
             </div>
         );
@@ -200,8 +168,8 @@ class FilterStatisticForm extends Component {
     }
 }
 
-function mapStateToProps({ taskCategories, tasksByCategory, logStatistics }) {
-    return { taskCategories, tasksByCategory, logStatistics };
+function mapStateToProps({ taskCategories, tasksByCategory }) {
+    return { taskCategories, tasksByCategory };
 }
 
 export default connect(mapStateToProps, actions)(withRouter(FilterStatisticForm));

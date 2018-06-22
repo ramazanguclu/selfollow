@@ -12,7 +12,7 @@ class ViewLogStatistic extends Component {
             let substrNumber = ('' + v).length > 2 ? 4 : 2;
     
             return ('00' + v).substr(-substrNumber, substrNumber);
-        }).join('-');
+        }).join('/');
     }
 
     renderStatisticItem() {
