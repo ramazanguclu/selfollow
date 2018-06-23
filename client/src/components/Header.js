@@ -13,6 +13,7 @@ class Header extends Component {
         return (
             <div>
                 <li><Link to={this.props.auth.data ? '/task/new' : '/login'} className="btn">Task Create</Link></li>
+                <li><Link to={this.props.auth.data ? '/task/statistics' : '/login'}>Statistics</Link></li>
                 {this.renderContent()}
             </div>
         );

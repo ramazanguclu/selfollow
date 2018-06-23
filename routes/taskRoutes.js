@@ -41,7 +41,7 @@ module.exports = app => {
         try {
             await TaskCategory.findByIdAndRemove(deleteId);
             await Task.remove({ _category: deleteId });
-            await TaskLog.remove({_category: deleteId});
+            await TaskLog.remove({ _category: deleteId });
 
             res.send(await getTaskCategories(req.user.id));
         } catch (err) {
@@ -68,10 +68,10 @@ module.exports = app => {
         return Task.findById(id);
     };
 
-    const updateTaskState = (id, state, startDate = 0) => {
+    const updateTaskState = (id, state, time) => {
         return Task.findByIdAndUpdate(id, {
             state: state,
-            start: startDate
+            startDate: time
         });
     };
 
@@ -92,7 +92,7 @@ module.exports = app => {
     });
 
     //task list by category id
-    app.get('/api/tasks/:categoryName/:categoryId', async (req, res) => {
+    app.get('/api/tasks/category/:categoryId', async (req, res) => {
         res.send(await getTaskByCategory(req.user.id, req.params.categoryId));
     });
 
@@ -138,13 +138,12 @@ module.exports = app => {
 
     //task log update
     const updateTasklogState = async (taskId, currentState, nextState) => {
-
         const log = await TaskLog.findOne({
             _task: taskId,
             state: currentState
         });
 
-        const dur = (new Date()).getTime() - log.start;
+        const dur = new Date() - log.startDate;
 
         try {
             await updateTotalLog(taskId, dur);
@@ -156,7 +155,7 @@ module.exports = app => {
                 },
                 {
                     state: nextState,
-                    end: (new Date()).getTime(),
+                    endDate: new Date(),
                     duration: dur
                 }
             );
@@ -173,29 +172,93 @@ module.exports = app => {
             const { state } = await taskById(_task);
 
             if (state === 'end') {
-                const dateStart = (new Date()).getTime();
-                await updateTaskState(_task, 'start', dateStart);
+                await updateTaskState(_task, 'start', new Date());
 
                 await new TaskLog({
-                    start: (new Date()).getTime(),
+                    startDate: new Date(),
                     state: 'start',
                     _task,
                     _category,
                     _user: req.user._id
                 }).save();
-
-                _type !== 'singleTask' ? res.send(await getTaskByCategory(req.user._id, _category)) : res.send(await logListWithTask(_task));
-
             } else {
-                await updateTaskState(_task, 'end');
+                await updateTaskState(_task, 'end', null);
                 await updateTasklogState(_task, 'start', 'end');
-
-                _type !== 'singleTask' ? res.send(await getTaskByCategory(req.user._id, _category)) : res.send(await logListWithTask(_task));
             }
+
+            _type !== 'singleTask' ?
+                res.send(await getTaskByCategory(req.user._id, _category)) :
+                res.send(await logListWithTask(_task));
         } catch (error) {
             console.log(error);
             res.status(422).send({ status: 'error' });
         }
+    });
+
+    app.get('/api/log/statistic/:type', async (req, res) => {
+        let response = [];
+        let taskId, catId;
+
+        const type = req.params.type;
+
+        if (req.query.taskId) {
+            taskId = mongoose.Types.ObjectId(req.query.taskId);
+        }
+
+        else if (req.query.catId) {
+            catId = mongoose.Types.ObjectId(req.query.catId);
+        }
+
+        if (type && (catId || taskId)) {
+            response = await TaskLog.aggregate([
+                {
+                    $match: {
+                        _user: req.user._id,
+                        $or: [
+                            { _task: taskId },
+                            { _category: catId }
+                        ]
+                    },
+                },
+                {
+                    $group: {
+                        _id:
+                        {
+                            $switch:
+                            {
+                                branches: [
+                                    {
+                                        case: type === 'monthly',
+                                        then: {
+                                            month: { $month: '$startDate' },
+                                            year: { $year: '$startDate' }
+                                        }
+                                    },
+                                    {
+                                        case: type === 'yearly',
+                                        then: {
+                                            year: { $year: '$startDate' }
+                                        }
+                                    }
+                                ],
+                                default: {
+                                    day: { $dayOfMonth: '$startDate' },
+                                    month: { $month: '$startDate' },
+                                    year: { $year: '$startDate' }
+                                }
+                            }
+                        },
+                        total: { $sum: '$duration' },
+                        count: { $sum: 1 }
+                    }
+                },
+                {
+                    $sort: { '_id.year': -1, '_id.month': -1, '_id.day': -1 }
+                },
+            ]);
+        }
+
+        res.send(response);
     });
     //endregion
 };

@@ -8,7 +8,8 @@ import {
     FETCH_TASKS_BY_CATEGORY,
     FETCH_WORKING_TASKS,
     FETCH_TASK,
-    FETCH_LOGS
+    FETCH_LOGS,
+    FETCH_LOG_STATISTICS
 } from './types';
 
 export const fetchUser = (id) => async (dispatch) => {
@@ -131,8 +132,8 @@ export const submitTask = (task, button) => async (dispatch) => {
     });
 };
 
-export const fetchTasksByCategory = (categoryName, categoryId) => async (dispatch) => {
-    const res = await axios.get('/api/tasks/' + categoryName + '/' + categoryId);
+export const fetchTasksByCategory = (categoryId) => async (dispatch) => {
+    const res = await axios.get('/api/tasks/category/' + categoryId);
 
     dispatch({
         id: categoryId,
@@ -182,6 +183,16 @@ export const fetchLogs = (taskId) => async (dispatch) => {
     dispatch({
         id: taskId,
         type: FETCH_LOGS,
+        payload: res.data
+    });
+};
+
+export const fetchLogStatistics = ({ _type, _category, _task = '' }, id) => async (dispatch) => {
+    const res = await axios.get('/api/log/statistic/' + _type + '?catId=' + _category + '&taskId=' + _task);
+
+    dispatch({
+        id,
+        type: FETCH_LOG_STATISTICS,
         payload: res.data
     });
 };

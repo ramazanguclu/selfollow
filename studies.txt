@@ -15,3 +15,9 @@ https://github.com/schnee72/react-router-dom-example
 https://engineering.musefind.com/react-lifecycle-methods-how-and-when-to-use-them-2111a1b692b1
 https://stackoverflow.com/questions/32128978/react-router-no-not-found-route
 http://mongoosejs.com/docs/populate.html
+https://docs.mongodb.com/manual/reference/operator/aggregation/group/
+https://stackoverflow.com/questions/26800740/mongoose-group-query-in-node-js-express-route/26802632#26802632
+https://medium.freecodecamp.org/introduction-to-mongoose-for-mongodb-d2a7aa593c57
+https://docs.mongodb.com/manual/reference/operator/aggregation/cond/
+https://docs.mongodb.com/manual/reference/operator/aggregation/switch/#exp._S_switch
+https://stackoverflow.com/questions/31103624/mongodb-sort-result-of-aggregate-query-and-display-day-name

@@ -27,11 +27,10 @@ class ListCategory extends Component {
 
     openStartCollapsible(item) {
         const catId = item.getAttribute('data');
-        const catName = item.getAttribute('name');
 
         this.setState({ catId });
 
-        this.props.fetchTasksByCategory(catName, catId);
+        this.props.fetchTasksByCategory(catId);
     }
 
     handleOpenCollapsible() {

@@ -8,6 +8,7 @@ import taskByCategoryReducer from './taskByCategoryReducer';
 import taskByIdReducer from './taskByIdReducer';
 import taskWorkingReducer from './taskWorkingReducer';
 import taskLogReducer from './taskLogReducer';
+import logStatisticReducer from './logStatisticReducer';
 import { reducer as reduxForm } from 'redux-form';
 
 export default combineReducers({
@@ -20,5 +21,6 @@ export default combineReducers({
     task: taskByIdReducer,
     workingTasks: taskWorkingReducer,
     taskLogs: taskLogReducer,
+    logStatistics: logStatisticReducer,
     form: reduxForm
 });

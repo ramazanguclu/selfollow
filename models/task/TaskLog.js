@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const taskLogSchema = new Schema({
-    start: { type: Number, default: 0 },
-    end: { type: Number, default: 0 },
+    startDate: { type: Date, default: null },
+    endDate: { type: Date, default: null },
     duration: { type: Number, default: 0 },
     state: { type: String, default: 'end' },
     _user: { type: Schema.Types.ObjectId, ref: 'users' },

@@ -63,7 +63,7 @@ class TaskNew extends Component {
 
         for (const v of taskFormField) {
             const val = this.state[v.key];
-            
+
             if (!val) {
                 button.classList.add('disabled');
                 break;
@@ -118,7 +118,6 @@ class TaskNew extends Component {
                             <i className="material-icons right">send</i>
                         </button>
                     </div>
-
 
                     {this.renderLoading()}
                 </form>
