@@ -111,14 +111,6 @@ class FilterStatisticForm extends Component {
         };
     }
 
-    renderOptions(items) {
-        return items.map(v => {
-            return (
-                <option key={v._id || v} value={v._id || v}>{v.name || v}</option>
-            );
-        });
-    }
-
     renderForm() {
         return (
             <div className="row">
@@ -129,14 +121,14 @@ class FilterStatisticForm extends Component {
                         name={formInputs.type}
                         onChange={this.handleChange}
                         label={'Time Period'}
-                        options={this.renderOptions(statisticTimePeriod)}
+                        options={statisticTimePeriod}
                     />
 
                     <Select
                         name={formInputs.category}
                         onChange={this.handleChange}
                         label={'Categories'}
-                        options={this.renderOptions(this.props.taskCategories)}
+                        options={this.props.taskCategories}
                         defaultOptionLabel={'Choose Task Category'}
                     />
 
@@ -144,7 +136,7 @@ class FilterStatisticForm extends Component {
                         name={formInputs.task}
                         onChange={this.handleChange}
                         label={'Tasks'}
-                        options={this.props.tasksByCategory.id === this.state[formInputs.category] && this.renderOptions(this.props.tasksByCategory.data)}
+                        options={this.props.tasksByCategory.id === this.state[formInputs.category] ? this.props.tasksByCategory.data : []}
                         defaultOptionLabel={'Choose Task By Category'}
                         hideClass={'hide'}
                         customClass={'tasks-container'}
