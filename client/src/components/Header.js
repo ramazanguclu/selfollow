@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import axios from 'axios';
+window.axios = axios;
+
 class Header extends Component {
     renderContent() {
         if (this.props.auth.data) return <li><a href="/api/logout">Logout</a></li>;
@@ -14,6 +17,7 @@ class Header extends Component {
             <div>
                 <li><Link to={this.props.auth.data ? '/task/new' : '/login'} className="btn">Task Create</Link></li>
                 <li><Link to={this.props.auth.data ? '/task/statistics' : '/login'}>Statistics</Link></li>
+                <li><Link to={this.props.auth.data ? '/task/inprogress' : '/login'}>InProgess</Link></li>
                 {this.renderContent()}
             </div>
         );

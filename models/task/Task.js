@@ -9,7 +9,8 @@ const taskSchema = new Schema({
     _category: { type: Schema.Types.ObjectId, ref: 'taskCategories' },
     _user: { type: Schema.Types.ObjectId, ref: 'users' },
     total: { type: Number, default: 0 },
-    logs: [{ type: Schema.Types.ObjectId, ref: 'taskLogs' }]
+    logs: [{ type: Schema.Types.ObjectId, ref: 'taskLogs' }],
+    isFavorite: { type: Boolean, default: false }
 }, { versionKey: false });
 
 mongoose.model('tasks', taskSchema);

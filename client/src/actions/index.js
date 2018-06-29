@@ -159,10 +159,11 @@ export const submitTaskLog = ({ _task, _category, button, _type }) => async (dis
     });
 };
 
-export const fetchWorkingTask = () => async (dispatch) => {
+export const fetchWorkingTask = (id) => async (dispatch) => {
     const res = await axios.get('/api/log/working');
 
     dispatch({
+        id,
         type: FETCH_WORKING_TASKS,
         payload: res.data
     });
@@ -170,6 +171,15 @@ export const fetchWorkingTask = () => async (dispatch) => {
 
 export const fetchTask = (id) => async (dispatch) => {
     const res = await axios.get('/api/task/' + id);
+
+    dispatch({
+        type: FETCH_TASK,
+        payload: res.data
+    });
+};
+
+export const submitTaskFavorite = (type, id) => async (dispatch) => {
+    const res = await axios.post('/api/task/favorite/' + type + '/' + id);
 
     dispatch({
         type: FETCH_TASK,

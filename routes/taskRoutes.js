@@ -68,6 +68,12 @@ module.exports = app => {
         return Task.findById(id);
     };
 
+    const updateTaskFavorite = (id, type) => {
+        return Task.findByIdAndUpdate(id, {
+            isFavorite: type === 'add' ? true : false
+        });
+    };
+
     const updateTaskState = (id, state, time) => {
         return Task.findByIdAndUpdate(id, {
             state: state,
@@ -80,6 +86,18 @@ module.exports = app => {
             $inc: { total: duration }
         });
     };
+
+    //task favorite
+    app.post('/api/task/favorite/:type/:taskid', async (req, res) => {
+        try {
+            await updateTaskFavorite(req.params.taskid, req.params.type);
+            res.send(await taskById(req.params.taskid));
+        } catch (error) {
+            console.log(error);
+            res.status(422).send({ status: 'error' });
+        }
+
+    });
 
     //task view
     app.get('/api/task/:taskid', async (req, res) => {
@@ -122,7 +140,7 @@ module.exports = app => {
         const log = await TaskLog.find({
             _user: req.user._id,
             state: 'start'
-        });
+        }).populate('_task');
 
         res.send(log);
     });
