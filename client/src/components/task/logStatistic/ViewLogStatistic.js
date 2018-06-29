@@ -10,7 +10,7 @@ class ViewLogStatistic extends Component {
     modifyDate(date) {
         return Object.values(date).map((v) => {
             let substrNumber = ('' + v).length > 2 ? 4 : 2;
-    
+
             return ('00' + v).substr(-substrNumber, substrNumber);
         }).join('/');
     }
@@ -19,9 +19,15 @@ class ViewLogStatistic extends Component {
         return this.props.logStatistics.data.map((v, k) => {
             return (
                 <li key={k} className="collection-item">
-                    <div>
-                        {this.modifyDate(v._id)}
-                        <a className="secondary-content">{totalTimeHuman(v.total, 3)}</a>
+                    <div className="row">
+                        <div className="col s12 m6 l6">
+                            {this.modifyDate(v._id)}
+                        </div>
+                        <div className="col s12 m6 l6">
+                            <a className="secondary-content">
+                                {totalTimeHuman(v.total, 3)}
+                            </a>
+                        </div>
                     </div>
                 </li>
             );

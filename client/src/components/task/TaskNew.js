@@ -6,6 +6,7 @@ import M from 'materialize-css/dist/js/materialize.min.js';
 
 import modifyName from '../../utils/modifyName';
 import taskFormField from './taskFormField';
+import { BackButton, SubmitButtonSend } from '../elements/Button';
 
 class TaskNew extends Component {
     constructor(props) {
@@ -107,16 +108,9 @@ class TaskNew extends Component {
                         <label>Categories</label>
                     </div>
 
-                    <div className="input-field col s12">
-                        <button className="red btn-flat left white-text" onClick={this.handleBack}>
-                            Back
-                            <i className="material-icons left">arrow_back</i>
-                        </button>
-
-                        <button className="btn waves-effect waves-light right disabled" type="submit" onClick={this.handleSubmit}>
-                            Submit
-                            <i className="material-icons right">send</i>
-                        </button>
+                    <div className="input-field col s12 row">
+                        <BackButton label={'Back'} onClick={this.handleBack} />
+                        <SubmitButtonSend label={'Submit'} onClick={this.handleSubmit} />
                     </div>
 
                     {this.renderLoading()}

@@ -34,7 +34,7 @@ class CollapsibleBody extends Component {
                             <span className="card-title">
                                 {v.name}
                             </span>
-                            <p>{v.description}</p>
+                            <p className="truncate">{v.description}</p>
                             <p>Total: {totalTimeHuman(v.total, 3)}</p>
                         </div>
                         <div className="card-action">
