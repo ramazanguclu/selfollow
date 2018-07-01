@@ -5,11 +5,15 @@ import Loading from '../Loading';
 import totalTimeHuman from '../../utils/totalTimeHuman';
 import { withRouter } from 'react-router-dom';
 import { startLog, detectState, datePretty } from '../../utils/viewHumanDate';
+import { BackButton } from '../elements/Button';
+import Favorite from './Favorite';
 
 class TaskView extends Component {
-    componentDidMount() {
-        this.props.fetchTask(this.props.match.params.id);
+    constructor(props) {
+        super(props);
+
         this.props.fetchLogs(this.props.match.params.id);
+        this.props.fetchTask(this.props.match.params.id);
     }
 
     handleStart(data, _type, e) {
@@ -24,7 +28,7 @@ class TaskView extends Component {
     }
 
     contentLogs() {
-        return this.props.taskLogs.data.reverse().map(v => {
+        return this.props.taskLogs.data.map(v => {
             return (
                 <tr key={v._id}>
                     <td>{datePretty(v.startDate)}</td>
@@ -60,33 +64,31 @@ class TaskView extends Component {
     }
 
     render() {
-        const taskLog = this.props.taskLogs.data[0];
-        const task = taskLog && taskLog['_task'] || this.props.task;
+        const taskLog = this.props.taskLogs.data[0] || {};
+        const task = taskLog._task || this.props.task;
 
         return (
             <div>
-                {!task._id || task._id !== this.props.match.params.id ?
-                    <Loading /> :
+                {(!task || task._id !== this.props.match.params.id) ? <Loading /> :
                     <div className="card-panel blue-grey lighten-1 z-depth-2 white-text">
                         <h1>{task.name}</h1>
                         <p className="flow-text">{task.description}</p>
                         <p>{'Total: ' + totalTimeHuman(task.total, 3)}</p>
-                        <button className="btn waves-effect waves-light" onClick={this.handleStart.bind(this, task, 'singleTask')}>{detectState(task.state)}</button>
+
+                        <button
+                            className="btn waves-effect waves-light"
+                            onClick={this.handleStart.bind(this, task, 'singleTask')}
+                        >
+                            {detectState(task.state)}
+                        </button>
+
+                        <Favorite task={this.props.task} />
                     </div>
                 }
 
                 {this.renderLogs()}
-                <div className="row">
-                    <div className="input-field col s12">
-                        <button
-                            className="red btn-flat left white-text"
-                            onClick={() => { this.props.history.goBack(); }}
-                        >
-                            Back
-                            <i className="material-icons left">arrow_back</i>
-                        </button>
-                    </div>
-                </div>
+
+                <div className="input-field col s12 row"><BackButton label={'Back'} onClick={() => { this.props.history.goBack(); }} /></div>
             </div>
         );
     }

@@ -5,7 +5,7 @@ import * as actions from '../../../actions';
 import M from 'materialize-css/dist/js/materialize.min.js';
 import Select from '../../elements/Select';
 import RadioButton from '../../elements/RadioButton';
-import { BackButton, SubmitButton } from '../../elements/Button';
+import { BackButton, SubmitButtonDone } from '../../elements/Button';
 
 const statisticTimePeriod = ['daily', 'monthly', 'yearly'];
 const formInputs = { type: '_type', category: '_category', task: '_task' };
@@ -58,7 +58,7 @@ class FilterStatisticForm extends Component {
         this.setState({
             [name]: value,
             [name + 'Text']: elem.options[elem.selectedIndex]['text']
-        });
+        }, this.validate);
     }
 
     handleFilter(e) {
@@ -66,7 +66,7 @@ class FilterStatisticForm extends Component {
         const filter = e.target.getAttribute('data');
         const elemTaskSelect = document.querySelector('.tasks-container');
 
-        this.setState({ filter });
+        this.setState({ filter }, this.validate);
 
         if (filter === formInputs.task) {
             this.getTaskByCategory(this.state[formInputs.category]);
@@ -79,24 +79,35 @@ class FilterStatisticForm extends Component {
         }
     }
 
-    handleSubmit(e) {
-        this.props.handleClear();
+    validate() {
+        if (this.state.filter === formInputs.category) {
+            this.state[formInputs.category] ? this.setButtonClass(false) : this.setButtonClass(true);
+            return;
+        }
 
-        e.preventDefault();
+        this.state[formInputs.task] ? this.setButtonClass(false) : this.setButtonClass(true);
+    }
 
-        if (!this.state[formInputs.category]) return;
+    setButtonClass(isError) {
+        const submitButton = document.querySelector('[type=submit]');
+        isError ? submitButton.classList.add('disabled') : submitButton.classList.remove('disabled');
+    }
 
+    createTitle() {
         let title = {};
         title[formInputs.category] = this.state._categoryText;
 
-        if (this.state.filter === formInputs.task) {
-            if (this.state[formInputs.task])
-                title[formInputs.task] = this.state._taskText;
-            else return;
-        }
+        if (this.state.filter === formInputs.task) title[formInputs.task] = this.state._taskText;
+
+        return title;
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        this.props.handleClear();
 
         const logId = this.state[formInputs.category] + this.state[formInputs.task];
-        this.props.handleSubmit(title, logId);
+        this.props.handleSubmit(this.createTitle(), logId);
         this.props.fetchLogStatistics(this.state, logId);
     }
 
@@ -111,14 +122,6 @@ class FilterStatisticForm extends Component {
         };
     }
 
-    renderOptions(items) {
-        return items.map(v => {
-            return (
-                <option key={v._id || v} value={v._id || v}>{v.name || v}</option>
-            );
-        });
-    }
-
     renderForm() {
         return (
             <div className="row">
@@ -129,14 +132,14 @@ class FilterStatisticForm extends Component {
                         name={formInputs.type}
                         onChange={this.handleChange}
                         label={'Time Period'}
-                        options={this.renderOptions(statisticTimePeriod)}
+                        options={statisticTimePeriod}
                     />
 
                     <Select
                         name={formInputs.category}
                         onChange={this.handleChange}
                         label={'Categories'}
-                        options={this.renderOptions(this.props.taskCategories)}
+                        options={this.props.taskCategories}
                         defaultOptionLabel={'Choose Task Category'}
                     />
 
@@ -144,15 +147,15 @@ class FilterStatisticForm extends Component {
                         name={formInputs.task}
                         onChange={this.handleChange}
                         label={'Tasks'}
-                        options={this.props.tasksByCategory.id === this.state[formInputs.category] && this.renderOptions(this.props.tasksByCategory.data)}
+                        options={this.props.tasksByCategory.id === this.state[formInputs.category] ? this.props.tasksByCategory.data : []}
                         defaultOptionLabel={'Choose Task By Category'}
                         hideClass={'hide'}
                         customClass={'tasks-container'}
                     />
 
-                    <div className="input-field col s12">
+                    <div className="input-field col s12 row">
                         <BackButton label={'Back'} onClick={this.handleBack} />
-                        <SubmitButton label={'Statistics'} onClick={this.handleSubmit} />
+                        <SubmitButtonDone label={'Statistics'} onClick={this.handleSubmit} />
                     </div>
                 </form>
             </div>

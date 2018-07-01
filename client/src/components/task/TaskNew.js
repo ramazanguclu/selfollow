@@ -6,6 +6,8 @@ import M from 'materialize-css/dist/js/materialize.min.js';
 
 import modifyName from '../../utils/modifyName';
 import taskFormField from './taskFormField';
+import { BackButton, SubmitButtonSend } from '../elements/Button';
+import Checkbox from '../elements/Checkbox';
 
 class TaskNew extends Component {
     constructor(props) {
@@ -74,8 +76,9 @@ class TaskNew extends Component {
     }
 
     handleChange(e) {
+        const val = e.target.type === 'checkbox' ? e.target.checked : modifyName(e.target.value);
         this.setState({
-            [e.target.name]: modifyName(e.target.value)
+            [e.target.name]: val
         }, this.error);
     }
 
@@ -107,16 +110,11 @@ class TaskNew extends Component {
                         <label>Categories</label>
                     </div>
 
-                    <div className="input-field col s12">
-                        <button className="red btn-flat left white-text" onClick={this.handleBack}>
-                            Back
-                            <i className="material-icons left">arrow_back</i>
-                        </button>
+                    <Checkbox name={'isFavorite'} onChange={this.handleChange} label={'Is Favorite'} />
 
-                        <button className="btn waves-effect waves-light right disabled" type="submit" onClick={this.handleSubmit}>
-                            Submit
-                            <i className="material-icons right">send</i>
-                        </button>
+                    <div className="input-field col s12 row">
+                        <BackButton label={'Back'} onClick={this.handleBack} />
+                        <SubmitButtonSend label={'Submit'} onClick={this.handleSubmit} />
                     </div>
 
                     {this.renderLoading()}

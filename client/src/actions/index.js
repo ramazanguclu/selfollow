@@ -9,7 +9,8 @@ import {
     FETCH_WORKING_TASKS,
     FETCH_TASK,
     FETCH_LOGS,
-    FETCH_LOG_STATISTICS
+    FETCH_LOG_STATISTICS,
+    FETCH_FAVORITES_TASKS
 } from './types';
 
 export const fetchUser = (id) => async (dispatch) => {
@@ -132,6 +133,16 @@ export const submitTask = (task, button) => async (dispatch) => {
     });
 };
 
+export const fetchFavoritesTasks = (id) => async (dispatch) => {
+    const res = await axios.get('/api/tasks/favorites');
+
+    dispatch({
+        id,
+        type: FETCH_FAVORITES_TASKS,
+        payload: res.data
+    });
+};
+
 export const fetchTasksByCategory = (categoryId) => async (dispatch) => {
     const res = await axios.get('/api/tasks/category/' + categoryId);
 
@@ -159,10 +170,11 @@ export const submitTaskLog = ({ _task, _category, button, _type }) => async (dis
     });
 };
 
-export const fetchWorkingTask = () => async (dispatch) => {
+export const fetchWorkingTask = (id) => async (dispatch) => {
     const res = await axios.get('/api/log/working');
 
     dispatch({
+        id,
         type: FETCH_WORKING_TASKS,
         payload: res.data
     });
@@ -170,6 +182,15 @@ export const fetchWorkingTask = () => async (dispatch) => {
 
 export const fetchTask = (id) => async (dispatch) => {
     const res = await axios.get('/api/task/' + id);
+
+    dispatch({
+        type: FETCH_TASK,
+        payload: res.data
+    });
+};
+
+export const submitTaskFavorite = (type, id) => async (dispatch) => {
+    const res = await axios.post('/api/task/favorite/' + type + '/' + id);
 
     dispatch({
         type: FETCH_TASK,
