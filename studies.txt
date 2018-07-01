@@ -21,3 +21,7 @@ https://medium.freecodecamp.org/introduction-to-mongoose-for-mongodb-d2a7aa593c5
 https://docs.mongodb.com/manual/reference/operator/aggregation/cond/
 https://docs.mongodb.com/manual/reference/operator/aggregation/switch/#exp._S_switch
 https://stackoverflow.com/questions/31103624/mongodb-sort-result-of-aggregate-query-and-display-day-name
+https://docs.mongodb.com/manual/reference/operator/query/not/
+https://stackoverflow.com/questions/39843837/mongodb-remove-field-unset-not-functioning-to-modify
+https://docs.mongodb.com/manual/reference/operator/update/unset/#example
+https://stackoverflow.com/questions/6851933/how-to-remove-a-field-completely-from-a-mongodb-document

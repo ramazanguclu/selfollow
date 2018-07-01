@@ -8,3 +8,4 @@ export const FETCH_TASK = 'fetch_task';
 export const FETCH_WORKING_TASKS = 'fetch_working_tasks';
 export const FETCH_LOGS = 'fetch_logs';
 export const FETCH_LOG_STATISTICS = 'fetch_log_statistics';
+export const FETCH_FAVORITES_TASKS = 'fetch_favorites_tasks';

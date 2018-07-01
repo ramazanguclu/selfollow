@@ -9,7 +9,8 @@ import {
     FETCH_WORKING_TASKS,
     FETCH_TASK,
     FETCH_LOGS,
-    FETCH_LOG_STATISTICS
+    FETCH_LOG_STATISTICS,
+    FETCH_FAVORITES_TASKS
 } from './types';
 
 export const fetchUser = (id) => async (dispatch) => {
@@ -129,6 +130,16 @@ export const submitTask = (task, button) => async (dispatch) => {
     dispatch({
         type: FETCH_TASKS,
         payload: res.data.reverse()
+    });
+};
+
+export const fetchFavoritesTasks = (id) => async (dispatch) => {
+    const res = await axios.get('/api/tasks/favorites');
+
+    dispatch({
+        id,
+        type: FETCH_FAVORITES_TASKS,
+        payload: res.data
     });
 };
 

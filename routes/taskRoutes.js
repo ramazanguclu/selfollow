@@ -99,6 +99,16 @@ module.exports = app => {
 
     });
 
+    //task favarites list
+    app.get('/api/tasks/favorites', async (req, res) => {
+        const listFav = await Task.find({
+            _user: req.user._id,
+            isFavorite: true
+        });
+
+        res.send(listFav);
+    });
+
     //task view
     app.get('/api/task/:taskid', async (req, res) => {
         res.send(await taskById(req.params.taskid));
@@ -116,12 +126,13 @@ module.exports = app => {
 
     //task create
     app.post('/api/task/new', requireLogin, async (req, res) => {
-        const { name, description, _category } = req.body;
+        const { name, description, _category, isFavorite = false } = req.body;
 
         const task = new Task({
             name,
             description,
             _category,
+            isFavorite,
             _user: req.user.id
         });
 
@@ -146,7 +157,7 @@ module.exports = app => {
     });
 
     const logListWithTask = (id) => {
-        return TaskLog.find({ _task: id }).populate('_task');
+        return TaskLog.find({ _task: id }).sort({ _id: -1 });
     };
 
     //task log list

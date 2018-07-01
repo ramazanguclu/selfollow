@@ -12,6 +12,7 @@ import WordUpdate from './dictionary/word/WordUpdate';
 import TaskView from './task/TaskView';
 import Statistics from './task/logStatistic/Statistic';
 import InProgressTasks from './task/InProgressTasks';
+import FavoritesTasks from './task/FavoritesTasks';
 import Login from './Login';
 import NotFound from './NotFound';
 
@@ -51,6 +52,7 @@ class App extends Component {
                             <Route exact path="/task/view/:id" component={Restricted(TaskView, id)} />
                             <Route exact path="/task/statistics" component={Restricted(Statistics, id)} />
                             <Route exact path="/task/inprogress" component={Restricted(InProgressTasks, id)} />
+                            <Route exact path="/task/favorites" component={Restricted(FavoritesTasks, id)} />
 
                             <Route exact path="/dictionary" component={Restricted(Dictionary, id)} />
                             <Route exact path="/dictionary/words/:groupName/:group_id" component={Restricted(DictionaryWords, id)} />

@@ -26,3 +26,14 @@ export const SubmitButtonSend = ({ label, onClick }) => {
         </button>
     );
 };
+
+export const FavoriteButton = ({ colorClass, onClick }) => {
+    return (
+        <button
+            className={colorClass + ' btn-floating btn-large right white-text'}
+            onClick={onClick}
+        >
+            <i className="material-icons">favorite_border</i>
+        </button>
+    );
+};
