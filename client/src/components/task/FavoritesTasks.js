@@ -32,7 +32,7 @@ class FavoritesTasks extends Component {
         return (
             <div>
                 <ul className="collection with-header">
-                    <li className="collection-header"><h4>In Progress Tasks</h4></li>
+                    <li className="collection-header"><h4>Favorite Tasks</h4></li>
                     {this.props.favoritesTasks.id === this.state.id ? this.renderTasks() : <Loading />}
                 </ul>
 
