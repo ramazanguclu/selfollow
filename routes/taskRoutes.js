@@ -157,7 +157,7 @@ module.exports = app => {
     });
 
     const logListWithTask = (id) => {
-        return TaskLog.find({ _task: id }).sort({ _id: -1 });
+        return TaskLog.find({ _task: id }).sort({ _id: -1 }).populate('_task');
     };
 
     //task log list
