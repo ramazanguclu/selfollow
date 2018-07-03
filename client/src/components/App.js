@@ -3,12 +3,16 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 
-import Header from './Header';
-import Main from './Main';
 import Dictionary from './dictionary/Dictionary';
 import DictionaryWords from './dictionary/DictionaryWords';
 import WordNew from './dictionary/word/WordNew';
 import WordUpdate from './dictionary/word/WordUpdate';
+
+import Header from './Header';
+import Footer from './Footer';
+import Main from './Main';
+
+import TaskNew from './task/TaskNew';
 import TaskView from './task/TaskView';
 import Statistics from './task/logStatistic/Statistic';
 import InProgressTasks from './task/InProgressTasks';
@@ -17,8 +21,6 @@ import Login from './Login';
 import NotFound from './NotFound';
 
 import Restricted from './middlewares/Restricted';
-
-import TaskNew from './task/TaskNew';
 
 import M from 'materialize-css/dist/js/materialize.min.js';
 
@@ -43,7 +45,7 @@ class App extends Component {
             <BrowserRouter>
                 <div>
                     <Header />
-                    <div className="container">
+                    <main className="container">
                         <Switch>
                             <Route exact path="/login" component={Login} />
 
@@ -61,7 +63,8 @@ class App extends Component {
 
                             <Route component={NotFound} />
                         </Switch>
-                    </div>
+                    </main>
+                    <Footer />
                 </div>
             </BrowserRouter>
         );

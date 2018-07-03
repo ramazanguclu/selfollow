@@ -57,7 +57,7 @@ class TaskNew extends Component {
         e.target.classList.add('disabled');
         document.querySelector('.progress').classList.remove('hide');
 
-        this.props.submitTask(this.state, e.target);
+        this.props.submitTask(this.state, e.target, this.props.history);
     }
 
     error() {
@@ -112,7 +112,7 @@ class TaskNew extends Component {
 
                     <Checkbox name={'isFavorite'} onChange={this.handleChange} label={'Is Favorite'} />
 
-                    <div className="input-field col s12 row">
+                    <div className="input-field col s12 row margin-top-10">
                         <BackButton label={'Back'} onClick={this.handleBack} />
                         <SubmitButtonSend label={'Submit'} onClick={this.handleSubmit} />
                     </div>
