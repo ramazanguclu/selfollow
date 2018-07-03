@@ -18,7 +18,7 @@ class ViewLogStatistic extends Component {
     renderStatisticItem() {
         return this.props.logStatistics.data.map((v, k) => {
             return (
-                <li key={k} className="collection-item">
+                <li key={k} className="collection-item teal lighten-5">
                     <div className="row">
                         <div className="col s12 m6 l6">
                             {this.modifyDate(v._id)}
@@ -37,7 +37,7 @@ class ViewLogStatistic extends Component {
     renderStatistics() {
         return (
             <ul className="collection with-header">
-                <li className="collection-header">
+                <li className="collection-header teal lighten-3">
                     <h1>{this.props.title._category}</h1>
                     <h4>{this.props.title._task}</h4>
                 </li>

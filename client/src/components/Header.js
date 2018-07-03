@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import axios from 'axios';
-window.axios = axios;
-
 class Header extends Component {
     renderContent() {
         if (this.props.auth.data) return <li><a href="/api/logout">Logout</a></li>;

@@ -23,7 +23,7 @@ class InProgressTasks extends Component {
     renderTasks() {
         return this.props.workingTasks.data.map(({ _task }) => {
             return (
-                <Link to={'/task/view/' + _task._id} key={_task._id} className="collection-item">{_task.name}</Link>
+                <Link to={'/task/view/' + _task._id} key={_task._id} className="collection-item teal lighten-5">{_task.name}</Link>
             );
         });
     }
@@ -32,7 +32,7 @@ class InProgressTasks extends Component {
         return (
             <div>
                 <ul className="collection with-header">
-                    <li className="collection-header"><h4>In Progress Tasks</h4></li>
+                    <li className="collection-header teal lighten-3"><h4>In Progress Tasks</h4></li>
                     {this.props.workingTasks.id === this.state.id ? this.renderTasks() : <Loading />}
                 </ul>
 

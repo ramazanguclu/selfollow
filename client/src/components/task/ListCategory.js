@@ -52,10 +52,10 @@ class ListCategory extends Component {
 
             return (
                 <li key={v._id} data={v._id} name={v.name}>
-                    <div className="collapsible-header">
+                    <div className="collapsible-header teal lighten-4">
                         <div>{v.name}</div>
                     </div>
-                    <div className="collapsible-body">
+                    <div className="collapsible-body teal lighten-3">
                         <div className="row">
                             <button data-target="modal1" className="btn modal-trigger">Delete This Category</button>
                         </div>
