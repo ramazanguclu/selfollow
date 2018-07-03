@@ -119,12 +119,14 @@ export const deleteTaskCategory = (deleteId) => async (dispatch) => {
     });
 };
 
-export const submitTask = (task, button) => async (dispatch) => {
+export const submitTask = (task, button, history) => async (dispatch) => {
     const res = await axios.post('/api/task/new', task);
 
     if (res.status === 200 && res.statusText === 'OK') {
         button.classList.remove('disabled');
         document.querySelector('.progress').classList.add('hide');
+
+        setTimeout(() => { history.push('/'); }, 1 * 1000);
     }
 
     dispatch({

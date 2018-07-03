@@ -57,7 +57,7 @@ class TaskNew extends Component {
         e.target.classList.add('disabled');
         document.querySelector('.progress').classList.remove('hide');
 
-        this.props.submitTask(this.state, e.target);
+        this.props.submitTask(this.state, e.target, this.props.history);
     }
 
     error() {
