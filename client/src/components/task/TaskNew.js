@@ -112,7 +112,7 @@ class TaskNew extends Component {
 
                     <Checkbox name={'isFavorite'} onChange={this.handleChange} label={'Is Favorite'} />
 
-                    <div className="input-field col s12 row">
+                    <div className="input-field col s12 row margin-top-10">
                         <BackButton label={'Back'} onClick={this.handleBack} />
                         <SubmitButtonSend label={'Submit'} onClick={this.handleSubmit} />
                     </div>

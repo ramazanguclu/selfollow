@@ -12,10 +12,11 @@ class Header extends Component {
     listNavBar() {
         return (
             <div>
-                <li><Link to={this.props.auth.data ? '/task/new' : '/login'} className="btn">Task Create</Link></li>
-                <li><Link to={this.props.auth.data ? '/task/statistics' : '/login'}>Statistics</Link></li>
-                <li><Link to={this.props.auth.data ? '/task/inprogress' : '/login'}>InProgess</Link></li>
-                <li><Link to={this.props.auth.data ? '/task/favorites' : '/login'}>Favorites</Link></li>
+                <li><Link to={this.props.auth.data ? '/task/new' : '/login'} className="sidenav-close btn">Task Create</Link></li>
+                <li><Link to={this.props.auth.data ? '/task/statistics' : '/login'} className="sidenav-close">Statistics</Link></li>
+                <li><Link to={this.props.auth.data ? '/task/inprogress' : '/login'} className="sidenav-close">InProgess</Link></li>
+                <li><Link to={this.props.auth.data ? '/task/favorites' : '/login'} className="sidenav-close">Favorites</Link></li>
+                <li><Link to={this.props.auth.data ? '/task/test' : '/login'} className="sidenav-close">Test</Link></li>
                 {this.renderContent()}
             </div>
         );
