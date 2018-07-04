@@ -25,3 +25,4 @@ https://docs.mongodb.com/manual/reference/operator/query/not/
 https://stackoverflow.com/questions/39843837/mongodb-remove-field-unset-not-functioning-to-modify
 https://docs.mongodb.com/manual/reference/operator/update/unset/#example
 https://stackoverflow.com/questions/6851933/how-to-remove-a-field-completely-from-a-mongodb-document
+https://stackoverflow.com/questions/10811887/how-to-get-all-count-of-mongoose-model

@@ -155,8 +155,8 @@ export const fetchTasksByCategory = (categoryId) => async (dispatch) => {
     });
 };
 
-export const submitTaskLog = ({ _task, _category, button, _type }) => async (dispatch) => {
-    const res = await axios.post('/api/log/new', { _task, _category, _type });
+export const submitTaskLog = ({ _task, _category, button, _type, itemPerPage = 10, pageNumber = 1 }) => async (dispatch) => {
+    const res = await axios.post('/api/log/new', { _task, _category, _type, itemPerPage, pageNumber });
 
     if (res.status === 200 && res.statusText === 'OK') {
         button.classList.remove('disabled');
@@ -164,11 +164,14 @@ export const submitTaskLog = ({ _task, _category, button, _type }) => async (dis
 
     const id = (_type !== 'singleTask') ? _category : _task;
     const type = (_type !== 'singleTask') ? FETCH_TASKS_BY_CATEGORY : FETCH_LOGS;
+    const payload = (_type !== 'singleTask') ? res.data : res.data.data;
+    const count = (_type !== 'singleTask') ? 0 : res.data.count;
 
     dispatch({
         id,
         type,
-        payload: res.data
+        payload,
+        count
     });
 };
 
@@ -200,13 +203,14 @@ export const submitTaskFavorite = (type, id) => async (dispatch) => {
     });
 };
 
-export const fetchLogs = (taskId) => async (dispatch) => {
-    const res = await axios.get('/api/log/list/' + taskId);
+export const fetchLogs = (_task, itemPerPage = 10, pageNumber = 1) => async (dispatch) => {
+    const res = await axios.get('/api/log/list/' + _task + '/' + itemPerPage + '/' + pageNumber);
 
     dispatch({
-        id: taskId,
+        id: _task,
         type: FETCH_LOGS,
-        payload: res.data
+        count: res.data.count,
+        payload: res.data.data
     });
 };
 

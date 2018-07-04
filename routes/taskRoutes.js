@@ -156,13 +156,32 @@ module.exports = app => {
         res.send(log);
     });
 
-    const logListWithTask = (id) => {
-        return TaskLog.find({ _task: id }).sort({ _id: -1 }).populate('_task');
+    const detectSkip = (itemPerPage, pageNumber) => {
+        return itemPerPage * (pageNumber - 1);
+    };
+
+    const logListWithTask = (_task, itemPerPage, pageNumber) => {
+        return TaskLog.
+            find({ _task }).
+            sort({ _id: -1 }).
+            skip(detectSkip(itemPerPage, pageNumber)).
+            limit(itemPerPage).
+            populate('_task');
     };
 
     //task log list
-    app.get('/api/log/list/:taskid', requireLogin, async (req, res) => {
-        res.send(await logListWithTask(req.params.taskid));
+    app.get('/api/log/list/:_task/:itemPerPage/:pageNumber', requireLogin, async (req, res) => {
+        let { _task, itemPerPage = 10, pageNumber = 1 } = req.params;
+
+        itemPerPage = Math.abs(itemPerPage) || 10;
+        pageNumber = Math.abs(pageNumber) || 1;
+
+        const data = await logListWithTask(_task, itemPerPage, pageNumber);
+        const count = await TaskLog.count({ _task });
+
+        res.send({
+            data, count
+        });
     });
 
     //task log update
@@ -195,7 +214,7 @@ module.exports = app => {
 
     //task log create
     app.post('/api/log/new', requireLogin, async (req, res) => {
-        const { _task, _category, _type } = req.body;
+        const { _task, _category, _type, itemPerPage, pageNumber } = req.body;
 
         try {
             const { state } = await taskById(_task);
@@ -217,7 +236,10 @@ module.exports = app => {
 
             _type !== 'singleTask' ?
                 res.send(await getTaskByCategory(req.user._id, _category)) :
-                res.send(await logListWithTask(_task));
+                res.send({
+                    data: await logListWithTask(_task, itemPerPage, pageNumber),
+                    count: await TaskLog.count({ _task })
+                });
         } catch (error) {
             console.log(error);
             res.status(422).send({ status: 'error' });
