@@ -32,6 +32,11 @@ class TaskView extends Component {
         this.props.submitTaskLog({ _task, _category, button, _type, itemPerPage, pageNumber });
     }
 
+    handleChangePage(currentPage) {
+        this.setState({ currentPage });
+        this.props.fetchLogs(this.props.match.params.id, itemPerPage, currentPage);
+    }
+
     contentLogs() {
         return this.props.taskLogs.data.map(v => {
             return (
@@ -94,11 +99,9 @@ class TaskView extends Component {
                 {this.renderLogs()}
 
                 <Pagination
-                    setCurrentPage={(currentPage) => { this.setState({ currentPage }); }}
+                    handleChangePage={this.handleChangePage.bind(this)}
                     count={this.props.taskLogs.count}
                     itemPerPage={itemPerPage}
-                    callback={this.props.fetchLogs}
-                    callbackParam={this.props.match.params.id}
                 />
 
                 <div className="input-field col s12 row"><BackButton label={'Back'} onClick={() => { this.props.history.goBack(); }} /></div>

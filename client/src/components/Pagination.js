@@ -31,14 +31,13 @@ class Pagination extends Component {
 
     getNewPageData(currentPage) {
         this.setState({ currentPage }, () => {
-            this.props.setCurrentPage(currentPage);
-            this.props.callback(this.props.callbackParam, this.props.itemPerPage, this.state.currentPage);
+            this.props.handleChangePage(currentPage);
         });
     }
 
     getPageCount() {
         const { count, itemPerPage } = this.props;
-        return (parseInt(count / itemPerPage) + (count % itemPerPage ? 1 : 0));
+        return (parseInt(count / itemPerPage, 10) + (count % itemPerPage ? 1 : 0));
     }
 
     itemClass(index) {
@@ -57,10 +56,12 @@ class Pagination extends Component {
         const pageCount = this.getPageCount();
         const items = [];
 
-        if (pageCount === 1) return;
-
         for (let index = 0; index < pageCount; index++) {
-            items.push(<li key={index} className={'waves-effect' + this.itemClass(index)}><a data={index + 1} onClick={this.handleClickNumbers} href="#!">{index + 1}</a></li>);
+            items.push(
+                <li key={index} className={'waves-effect' + this.itemClass(index)}>
+                    <a data={index + 1} onClick={this.handleClickNumbers} href="#!">{index + 1}</a>
+                </li>
+            );
         }
 
         return items;

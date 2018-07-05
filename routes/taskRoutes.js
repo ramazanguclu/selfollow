@@ -161,6 +161,9 @@ module.exports = app => {
     };
 
     const logListWithTask = (_task, itemPerPage, pageNumber) => {
+        itemPerPage = Math.abs(itemPerPage) || 10;
+        pageNumber = Math.abs(pageNumber) || 1;
+
         return TaskLog.
             find({ _task }).
             sort({ _id: -1 }).
@@ -171,16 +174,11 @@ module.exports = app => {
 
     //task log list
     app.get('/api/log/list/:_task/:itemPerPage/:pageNumber', requireLogin, async (req, res) => {
-        let { _task, itemPerPage = 10, pageNumber = 1 } = req.params;
-
-        itemPerPage = Math.abs(itemPerPage) || 10;
-        pageNumber = Math.abs(pageNumber) || 1;
-
-        const data = await logListWithTask(_task, itemPerPage, pageNumber);
-        const count = await TaskLog.count({ _task });
+        const { _task, itemPerPage, pageNumber } = req.params;
 
         res.send({
-            data, count
+            data: await logListWithTask(_task, itemPerPage, pageNumber),
+            count: await TaskLog.count({ _task })
         });
     });
 
@@ -212,9 +210,21 @@ module.exports = app => {
         }
     };
 
+    const logResponse = async ({ _user, _task, _category, _type, itemPerPage, pageNumber }) => {
+        const isSingleTask = _type === 'singleTask';
+
+        return isSingleTask
+            ? {
+                data: await logListWithTask(_task, itemPerPage, pageNumber),
+                count: await TaskLog.count({ _task })
+            }
+            : getTaskByCategory(_user, _category);
+    };
+
     //task log create
     app.post('/api/log/new', requireLogin, async (req, res) => {
         const { _task, _category, _type, itemPerPage, pageNumber } = req.body;
+        const _user = req.user._id;
 
         try {
             const { state } = await taskById(_task);
@@ -227,22 +237,19 @@ module.exports = app => {
                     state: 'start',
                     _task,
                     _category,
-                    _user: req.user._id
+                    _user
                 }).save();
-            } else {
+            }
+            else {
                 await updateTaskState(_task, 'end', null);
                 await updateTasklogState(_task, 'start', 'end');
             }
 
-            _type !== 'singleTask' ?
-                res.send(await getTaskByCategory(req.user._id, _category)) :
-                res.send({
-                    data: await logListWithTask(_task, itemPerPage, pageNumber),
-                    count: await TaskLog.count({ _task })
-                });
+            res.send(await logResponse({ _user, _task, _category, _type, itemPerPage, pageNumber }));
+
         } catch (error) {
             console.log(error);
-            res.status(422).send({ status: 'error' });
+            res.status(422).send(error);
         }
     });
 

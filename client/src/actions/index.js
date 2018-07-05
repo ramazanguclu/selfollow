@@ -162,16 +162,13 @@ export const submitTaskLog = ({ _task, _category, button, _type, itemPerPage = 1
         button.classList.remove('disabled');
     }
 
-    const id = (_type !== 'singleTask') ? _category : _task;
-    const type = (_type !== 'singleTask') ? FETCH_TASKS_BY_CATEGORY : FETCH_LOGS;
-    const payload = (_type !== 'singleTask') ? res.data : res.data.data;
-    const count = (_type !== 'singleTask') ? 0 : res.data.count;
+    const isSingleTask = _type === 'singleTask';
 
     dispatch({
-        id,
-        type,
-        payload,
-        count
+        id: isSingleTask ? _task : _category,
+        type: isSingleTask ? FETCH_LOGS : FETCH_TASKS_BY_CATEGORY,
+        payload: isSingleTask ? res.data.data : res.data,
+        count: isSingleTask ? res.data.count : 0
     });
 };
 
