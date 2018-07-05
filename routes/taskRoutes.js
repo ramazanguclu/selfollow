@@ -253,30 +253,25 @@ module.exports = app => {
         }
     });
 
-    app.get('/api/log/statistic/:type', async (req, res) => {
-        let response = [];
-        let taskId, catId;
+    app.get('/api/log/statistic', async (req, res) => {
+        let data = [];
+        let count = 0;
+        let { _task, _category } = req.query;
+        const { _type, itemPerPage, pageNumber } = req.query;
 
-        const type = req.params.type;
+        if (_task) _task = mongoose.Types.ObjectId(_task);
+        else if (_category) _category = mongoose.Types.ObjectId(_category);
 
-        if (req.query.taskId) {
-            taskId = mongoose.Types.ObjectId(req.query.taskId);
-        }
-
-        else if (req.query.catId) {
-            catId = mongoose.Types.ObjectId(req.query.catId);
-        }
-
-        if (type && (catId || taskId)) {
-            response = await TaskLog.aggregate([
+        if (_category || _task) {
+            data = await TaskLog.aggregate([
                 {
                     $match: {
                         _user: req.user._id,
                         $or: [
-                            { _task: taskId },
-                            { _category: catId }
+                            { _task },
+                            { _category }
                         ]
-                    },
+                    }
                 },
                 {
                     $group: {
@@ -286,14 +281,14 @@ module.exports = app => {
                             {
                                 branches: [
                                     {
-                                        case: type === 'monthly',
+                                        case: _type === 'monthly',
                                         then: {
                                             month: { $month: '$startDate' },
                                             year: { $year: '$startDate' }
                                         }
                                     },
                                     {
-                                        case: type === 'yearly',
+                                        case: _type === 'yearly',
                                         then: {
                                             year: { $year: '$startDate' }
                                         }
@@ -312,11 +307,16 @@ module.exports = app => {
                 },
                 {
                     $sort: { '_id.year': -1, '_id.month': -1, '_id.day': -1 }
-                },
+                }
             ]);
+
+            const skip = detectSkip(itemPerPage, pageNumber);
+            count = data.length;
+
+            data = data.slice(skip, skip + Number(itemPerPage));
         }
 
-        res.send(response);
+        res.send({ data, count });
     });
     //endregion
 };

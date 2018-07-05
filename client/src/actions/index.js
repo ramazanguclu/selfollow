@@ -211,12 +211,15 @@ export const fetchLogs = (_task, itemPerPage = 10, pageNumber = 1) => async (dis
     });
 };
 
-export const fetchLogStatistics = ({ _type, _category, _task = '' }, id) => async (dispatch) => {
-    const res = await axios.get('/api/log/statistic/' + _type + '?catId=' + _category + '&taskId=' + _task);
+export const fetchLogStatistics = ({ _type = 'daily', _category = '', _task = '' }, id, itemPerPage = 10, pageNumber = 1) => async (dispatch) => {
+    const res = await axios.get('/api/log/statistic', {
+        params: { _type, _category, _task, itemPerPage, pageNumber }
+    });
 
     dispatch({
         id,
         type: FETCH_LOG_STATISTICS,
-        payload: res.data
+        payload: res.data.data,
+        count: res.data.count
     });
 };
