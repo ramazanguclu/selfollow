@@ -156,13 +156,30 @@ module.exports = app => {
         res.send(log);
     });
 
-    const logListWithTask = (id) => {
-        return TaskLog.find({ _task: id }).sort({ _id: -1 }).populate('_task');
+    const detectSkip = (itemPerPage, pageNumber) => {
+        return itemPerPage * (pageNumber - 1);
+    };
+
+    const logListWithTask = (_task, itemPerPage, pageNumber) => {
+        itemPerPage = Math.abs(itemPerPage) || 10;
+        pageNumber = Math.abs(pageNumber) || 1;
+
+        return TaskLog.
+            find({ _task }).
+            sort({ _id: -1 }).
+            skip(detectSkip(itemPerPage, pageNumber)).
+            limit(itemPerPage).
+            populate('_task');
     };
 
     //task log list
-    app.get('/api/log/list/:taskid', requireLogin, async (req, res) => {
-        res.send(await logListWithTask(req.params.taskid));
+    app.get('/api/log/list/:_task/:itemPerPage/:pageNumber', requireLogin, async (req, res) => {
+        const { _task, itemPerPage, pageNumber } = req.params;
+
+        res.send({
+            data: await logListWithTask(_task, itemPerPage, pageNumber),
+            count: await TaskLog.count({ _task })
+        });
     });
 
     //task log update
@@ -193,9 +210,21 @@ module.exports = app => {
         }
     };
 
+    const logResponse = async ({ _user, _task, _category, _type, itemPerPage, pageNumber }) => {
+        const isSingleTask = _type === 'singleTask';
+
+        return isSingleTask
+            ? {
+                data: await logListWithTask(_task, itemPerPage, pageNumber),
+                count: await TaskLog.count({ _task })
+            }
+            : getTaskByCategory(_user, _category);
+    };
+
     //task log create
     app.post('/api/log/new', requireLogin, async (req, res) => {
-        const { _task, _category, _type } = req.body;
+        const { _task, _category, _type, itemPerPage, pageNumber } = req.body;
+        const _user = req.user._id;
 
         try {
             const { state } = await taskById(_task);
@@ -208,46 +237,41 @@ module.exports = app => {
                     state: 'start',
                     _task,
                     _category,
-                    _user: req.user._id
+                    _user
                 }).save();
-            } else {
+            }
+            else {
                 await updateTaskState(_task, 'end', null);
                 await updateTasklogState(_task, 'start', 'end');
             }
 
-            _type !== 'singleTask' ?
-                res.send(await getTaskByCategory(req.user._id, _category)) :
-                res.send(await logListWithTask(_task));
+            res.send(await logResponse({ _user, _task, _category, _type, itemPerPage, pageNumber }));
+
         } catch (error) {
             console.log(error);
-            res.status(422).send({ status: 'error' });
+            res.status(422).send(error);
         }
     });
 
-    app.get('/api/log/statistic/:type', async (req, res) => {
-        let response = [];
-        let taskId, catId;
+    app.get('/api/log/statistic', async (req, res) => {
+        let data = [];
+        let count = 0;
+        let { _task, _category } = req.query;
+        const { _type, itemPerPage, pageNumber } = req.query;
 
-        const type = req.params.type;
+        if (_task) _task = mongoose.Types.ObjectId(_task);
+        else if (_category) _category = mongoose.Types.ObjectId(_category);
 
-        if (req.query.taskId) {
-            taskId = mongoose.Types.ObjectId(req.query.taskId);
-        }
-
-        else if (req.query.catId) {
-            catId = mongoose.Types.ObjectId(req.query.catId);
-        }
-
-        if (type && (catId || taskId)) {
-            response = await TaskLog.aggregate([
+        if (_category || _task) {
+            data = await TaskLog.aggregate([
                 {
                     $match: {
                         _user: req.user._id,
                         $or: [
-                            { _task: taskId },
-                            { _category: catId }
+                            { _task },
+                            { _category }
                         ]
-                    },
+                    }
                 },
                 {
                     $group: {
@@ -257,14 +281,14 @@ module.exports = app => {
                             {
                                 branches: [
                                     {
-                                        case: type === 'monthly',
+                                        case: _type === 'monthly',
                                         then: {
                                             month: { $month: '$startDate' },
                                             year: { $year: '$startDate' }
                                         }
                                     },
                                     {
-                                        case: type === 'yearly',
+                                        case: _type === 'yearly',
                                         then: {
                                             year: { $year: '$startDate' }
                                         }
@@ -283,11 +307,16 @@ module.exports = app => {
                 },
                 {
                     $sort: { '_id.year': -1, '_id.month': -1, '_id.day': -1 }
-                },
+                }
             ]);
+
+            const skip = detectSkip(itemPerPage, pageNumber);
+            count = data.length;
+
+            data = data.slice(skip, skip + Number(itemPerPage));
         }
 
-        res.send(response);
+        res.send({ data, count });
     });
     //endregion
 };

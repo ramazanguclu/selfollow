@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as actions from '../../../actions';
 
 import Loading from '../../Loading';
+import Pagination from '../../Pagination';
 
 class ViewLogStatistic extends Component {
     modifyDate(date) {
@@ -42,6 +43,8 @@ class ViewLogStatistic extends Component {
                     <h4>{this.props.title._task}</h4>
                 </li>
                 {this.renderStatisticItem()}
+
+                <Pagination handleChangePage={this.props.handleChangePage} count={this.props.logStatistics.count} itemPerPage={this.props.itemPerPage} />
             </ul>
         );
     }

@@ -2,18 +2,22 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions';
 import Loading from '../Loading';
+import Pagination from '../Pagination';
 import totalTimeHuman from '../../utils/totalTimeHuman';
 import { withRouter } from 'react-router-dom';
 import { startLog, detectState, datePretty } from '../../utils/viewHumanDate';
 import { BackButton } from '../elements/Button';
 import Favorite from './Favorite';
+const itemPerPage = 10;
 
 class TaskView extends Component {
     constructor(props) {
         super(props);
 
-        this.props.fetchLogs(this.props.match.params.id);
+        this.props.fetchLogs(this.props.match.params.id, itemPerPage);
         this.props.fetchTask(this.props.match.params.id);
+
+        this.state = { currentPage: 1 };
     }
 
     handleStart(data, _type, e) {
@@ -24,7 +28,13 @@ class TaskView extends Component {
         const _category = data._category;
         const button = e.target;
 
-        this.props.submitTaskLog({ _task, _category, button, _type });
+        const pageNumber = this.state.currentPage;
+        this.props.submitTaskLog({ _task, _category, button, _type, itemPerPage, pageNumber });
+    }
+
+    handleChangePage(currentPage) {
+        this.setState({ currentPage });
+        this.props.fetchLogs(this.props.match.params.id, itemPerPage, currentPage);
     }
 
     contentLogs() {
@@ -87,6 +97,12 @@ class TaskView extends Component {
                 }
 
                 {this.renderLogs()}
+
+                <Pagination
+                    handleChangePage={this.handleChangePage.bind(this)}
+                    count={this.props.taskLogs.count}
+                    itemPerPage={itemPerPage}
+                />
 
                 <div className="input-field col s12 row"><BackButton label={'Back'} onClick={() => { this.props.history.goBack(); }} /></div>
             </div>

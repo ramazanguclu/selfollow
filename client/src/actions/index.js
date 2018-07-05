@@ -155,20 +155,20 @@ export const fetchTasksByCategory = (categoryId) => async (dispatch) => {
     });
 };
 
-export const submitTaskLog = ({ _task, _category, button, _type }) => async (dispatch) => {
-    const res = await axios.post('/api/log/new', { _task, _category, _type });
+export const submitTaskLog = ({ _task, _category, button, _type, itemPerPage = 10, pageNumber = 1 }) => async (dispatch) => {
+    const res = await axios.post('/api/log/new', { _task, _category, _type, itemPerPage, pageNumber });
 
     if (res.status === 200 && res.statusText === 'OK') {
         button.classList.remove('disabled');
     }
 
-    const id = (_type !== 'singleTask') ? _category : _task;
-    const type = (_type !== 'singleTask') ? FETCH_TASKS_BY_CATEGORY : FETCH_LOGS;
+    const isSingleTask = _type === 'singleTask';
 
     dispatch({
-        id,
-        type,
-        payload: res.data
+        id: isSingleTask ? _task : _category,
+        type: isSingleTask ? FETCH_LOGS : FETCH_TASKS_BY_CATEGORY,
+        payload: isSingleTask ? res.data.data : res.data,
+        count: isSingleTask ? res.data.count : 0
     });
 };
 
@@ -200,22 +200,26 @@ export const submitTaskFavorite = (type, id) => async (dispatch) => {
     });
 };
 
-export const fetchLogs = (taskId) => async (dispatch) => {
-    const res = await axios.get('/api/log/list/' + taskId);
+export const fetchLogs = (_task, itemPerPage = 10, pageNumber = 1) => async (dispatch) => {
+    const res = await axios.get('/api/log/list/' + _task + '/' + itemPerPage + '/' + pageNumber);
 
     dispatch({
-        id: taskId,
+        id: _task,
         type: FETCH_LOGS,
-        payload: res.data
+        count: res.data.count,
+        payload: res.data.data
     });
 };
 
-export const fetchLogStatistics = ({ _type, _category, _task = '' }, id) => async (dispatch) => {
-    const res = await axios.get('/api/log/statistic/' + _type + '?catId=' + _category + '&taskId=' + _task);
+export const fetchLogStatistics = ({ _type = 'daily', _category = '', _task = '' }, id, itemPerPage = 10, pageNumber = 1) => async (dispatch) => {
+    const res = await axios.get('/api/log/statistic', {
+        params: { _type, _category, _task, itemPerPage, pageNumber }
+    });
 
     dispatch({
         id,
         type: FETCH_LOG_STATISTICS,
-        payload: res.data
+        payload: res.data.data,
+        count: res.data.count
     });
 };

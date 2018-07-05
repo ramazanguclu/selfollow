@@ -18,7 +18,12 @@ class FilterStatisticForm extends Component {
         this.handleFilter = this.handleFilter.bind(this);
         this.handleBack = this.handleBack.bind(this);
 
-        this.state = { [formInputs.type]: statisticTimePeriod[0], [formInputs.category]: '', filter: formInputs.category, logId: '' };
+        this.state = {
+            [formInputs.type]: statisticTimePeriod[0],
+            [formInputs.category]: '',
+            filter: formInputs.category,
+            logId: ''
+        };
     }
 
     componentWillMount() {
@@ -47,6 +52,8 @@ class FilterStatisticForm extends Component {
     }
 
     handleChange(e) {
+        this.props.handleClear();
+        
         const elem = e.target;
         const name = elem.name;
         const value = elem.value;
@@ -106,9 +113,9 @@ class FilterStatisticForm extends Component {
         e.preventDefault();
         this.props.handleClear();
 
-        const logId = this.state[formInputs.category] + this.state[formInputs.task];
-        this.props.handleSubmit(this.createTitle(), logId);
-        this.props.fetchLogStatistics(this.state, logId);
+        const logId = this.state[formInputs.category] + this.state[formInputs.task] + this.state[formInputs.type];
+        this.props.handleSubmit(this.state, this.createTitle(), logId);
+        this.props.fetchLogStatistics(this.state, logId, this.props.itemPerPage);
     }
 
     getRadioButtonData() {
