@@ -119,6 +119,17 @@ export const deleteTaskCategory = (deleteId) => async (dispatch) => {
     });
 };
 
+export const deleteTask = (_task, history) => async (dispatch) => {
+    const res = await axios.post('/api/task/delete', { _task });
+
+    history.push('/');
+
+    dispatch({
+        type: FETCH_TASK_CATEGORIES,
+        payload: res.data.reverse()
+    });
+};
+
 export const submitTask = (task, button, history) => async (dispatch) => {
     const res = await axios.post('/api/task/new', task);
 

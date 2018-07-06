@@ -87,6 +87,21 @@ module.exports = app => {
         });
     };
 
+    //task delete
+    app.post('/api/task/delete', async (req, res) => {
+        const { _task } = req.body;
+
+        try {
+            await Task.findByIdAndRemove(_task);
+            await TaskLog.remove({ _task });
+
+            res.send(await getTaskCategories(req.user.id));
+        } catch (error) {
+            console.log(error);
+            res.status(422).send(error);
+        }
+    });
+
     //task favorite
     app.post('/api/task/favorite/:type/:taskid', async (req, res) => {
         try {
