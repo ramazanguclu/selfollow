@@ -8,6 +8,9 @@ import { withRouter } from 'react-router-dom';
 import { startLog, detectState, datePretty } from '../../utils/viewHumanDate';
 import { BackButton } from '../elements/Button';
 import Favorite from './Favorite';
+import Modal from '../Modal';
+
+const textDeleteTask = 'All logs which belong this category will be deleted!';
 const itemPerPage = 10;
 
 class TaskView extends Component {
@@ -35,6 +38,10 @@ class TaskView extends Component {
     handleChangePage(currentPage) {
         this.setState({ currentPage });
         this.props.fetchLogs(this.props.match.params.id, itemPerPage, currentPage);
+    }
+
+    handleDeleteSubmit(_task) {
+        this.props.deleteTask(_task, this.props.history);
     }
 
     contentLogs() {
@@ -81,6 +88,7 @@ class TaskView extends Component {
             <div>
                 {(!task || task._id !== this.props.match.params.id) ? <Loading /> :
                     <div className="card-panel blue-grey lighten-1 z-depth-2 white-text">
+                        <div className="row"><button data-target="modal1" className="btn modal-trigger">Delete This Task</button></div>
                         <h1>{task.name}</h1>
                         <p className="flow-text">{task.description}</p>
                         <p>{'Total: ' + totalTimeHuman(task.total, 3)}</p>
@@ -105,6 +113,7 @@ class TaskView extends Component {
                 />
 
                 <div className="input-field col s12 row"><BackButton label={'Back'} onClick={() => { this.props.history.goBack(); }} /></div>
+                <Modal modalId="modal1" agree={this.handleDeleteSubmit.bind(this, task._id)} text={textDeleteTask} />
             </div>
         );
     }

@@ -8,6 +8,7 @@ import modifyName from '../../utils/modifyName';
 import taskFormField from './taskFormField';
 import { BackButton, SubmitButtonSend } from '../elements/Button';
 import Checkbox from '../elements/Checkbox';
+import Select from '../elements/Select';
 
 class TaskNew extends Component {
     constructor(props) {
@@ -30,16 +31,6 @@ class TaskNew extends Component {
 
     componentDidUpdate() {
         M.AutoInit();
-    }
-
-    renderTaskCategories() {
-        return (
-            this.props.taskCategories.map(v => {
-                return (
-                    <option key={v._id} value={v._id}>{v.name}</option>
-                );
-            })
-        );
     }
 
     renderLoading() {
@@ -102,13 +93,7 @@ class TaskNew extends Component {
                         <label htmlFor="task_desc">Task Description</label>
                     </div>
 
-                    <div className="input-field col s12">
-                        <select name="_category" onChange={this.handleChange}>
-                            <option value="" disabled>Choose Task Category</option>
-                            {this.renderTaskCategories()}
-                        </select>
-                        <label>Categories</label>
-                    </div>
+                    <Select name={'_category'} onChange={this.handleChange} label={'Categories'} options={this.props.taskCategories} defaultOptionLabel={'Choose Task Category'} />
 
                     <Checkbox name={'isFavorite'} onChange={this.handleChange} label={'Is Favorite'} />
 
