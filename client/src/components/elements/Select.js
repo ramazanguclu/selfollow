@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import M from 'materialize-css/dist/js/materialize.min.js';
+import { ErrorSpan } from './Error';
 
 const detectContainerClass = (hideClass, customClass) => {
     var classCont = ['input-field', 'col', 's12'];
@@ -17,16 +19,21 @@ const renderOptions = (items) => {
     });
 };
 
-export default ({ name, onChange, label, options, defaultOptionLabel, hideClass, customClass }) => {
+export default ({ name, onChange, label, options, defaultOptionLabel, hideClass, customClass, hasError, errorText }) => {
+    useEffect(() => {
+        M.AutoInit();
+    }, [options]);
+
     return (
         <div className={detectContainerClass(hideClass, customClass)}>
             <select
                 name={name}
                 onChange={onChange}>
-                {defaultOptionLabel ? <option value="" >{defaultOptionLabel}</option> : ''}
+                {defaultOptionLabel ? <option value=''>{defaultOptionLabel}</option> : ''}
                 {renderOptions(options)}
             </select>
             <label>{label}</label>
+            {hasError ? <ErrorSpan errorText={errorText} /> : null}
         </div>
     );
 };

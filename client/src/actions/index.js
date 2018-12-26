@@ -130,13 +130,13 @@ export const deleteTask = (_task, history) => async (dispatch) => {
     });
 };
 
-export const submitTask = (task, button, history) => async (dispatch) => {
+export const submitTask = (task, progressEl, history, setSubmitting) => async (dispatch) => {
     const res = await axios.post('/api/task/new', task);
 
     if (res.status === 200 && res.statusText === 'OK') {
-        button.classList.remove('disabled');
-        document.querySelector('.progress').classList.add('hide');
-
+        progressEl.current.classList.add('hide');
+        setSubmitting(false);
+        
         setTimeout(() => { history.push('/'); }, 1 * 1000);
     }
 
