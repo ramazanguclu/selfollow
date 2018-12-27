@@ -17,9 +17,10 @@ const TaskNew = (props) => {
         props.fetchTaskCategories();
     }, []);
 
-    const handleSubmitForm = (formValues, { setSubmitting }) => {
+    const handleSubmitForm = (formValues, actions) => {
         progressEl.current.classList.remove('hide');
-        props.submitTask(formValues, progressEl, props.history, setSubmitting);
+
+        props.submitTask(formValues, progressEl, props.history, actions);
     };
 
     const handleBack = e => {
@@ -44,12 +45,13 @@ const TaskNew = (props) => {
     };
 
     const renderForm = propsForm => {
-        const {errors, touched, handleSubmit, isSubmitting, handleChange} = propsForm;
+        const {errors, touched, handleSubmit, isSubmitting, handleChange, values} = propsForm;
         
         return (
             <form onSubmit={handleSubmit}>
                 <div className="input-field col s12">
                     <input 
+                        value={values.name || ''}
                         className="validate" 
                         type="text" 
                         id="task_name" 
@@ -61,7 +63,8 @@ const TaskNew = (props) => {
                 </div>
 
                 <div className="input-field col s12">
-                    <textarea 
+                    <textarea
+                        value={values.description || ''} 
                         id="task_desc" 
                         className="materialize-textarea" 
                         name="description" 
@@ -78,7 +81,8 @@ const TaskNew = (props) => {
                     options={props.taskCategories}
                     defaultOptionLabel={'Choose Task Category'}
                     hasError={errors._category && touched._category}
-                    errorText={errors._category} 
+                    errorText={errors._category}
+                    value={values._category || ''}
                 />
 
                 <Checkbox 

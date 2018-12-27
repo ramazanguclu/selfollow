@@ -130,19 +130,20 @@ export const deleteTask = (_task, history) => async (dispatch) => {
     });
 };
 
-export const submitTask = (task, progressEl, history, setSubmitting) => async (dispatch) => {
+export const submitTask = (task, progressEl, history, actions) => async (dispatch) => {
     const res = await axios.post('/api/task/new', task);
-
+    
     if (res.status === 200 && res.statusText === 'OK') {
         progressEl.current.classList.add('hide');
-        setSubmitting(false);
-        
-        setTimeout(() => { history.push('/'); }, 1 * 1000);
+        actions.setSubmitting(false);
+        actions.resetForm();
     }
+
+    history.push(`/task/view/${res.data.createdTask._id}`);
 
     dispatch({
         type: FETCH_TASKS,
-        payload: res.data.reverse()
+        payload: res.data.list.reverse()
     });
 };
 

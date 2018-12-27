@@ -19,14 +19,15 @@ const renderOptions = (items) => {
     });
 };
 
-export default ({ name, onChange, label, options, defaultOptionLabel, hideClass, customClass, hasError, errorText }) => {
+export default ({ name, onChange, label, options, defaultOptionLabel, hideClass, customClass, hasError, errorText, value }) => {
     useEffect(() => {
         M.AutoInit();
-    }, [options]);
-
+    }, [value || options]);
+    
     return (
         <div className={detectContainerClass(hideClass, customClass)}>
             <select
+                value={value}
                 name={name}
                 onChange={onChange}>
                 {defaultOptionLabel ? <option value=''>{defaultOptionLabel}</option> : ''}
