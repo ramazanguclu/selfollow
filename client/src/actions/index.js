@@ -101,8 +101,13 @@ export const fetchTaskCategories = () => async (dispatch) => {
     });
 };
 
-export const submitTaskCategory = (category) => async (dispatch) => {
+export const submitTaskCategory = (category, actions) => async (dispatch) => {
     const res = await axios.post('/api/task/categories/new', category);
+
+    if (res.status === 200 && res.statusText === 'OK') { 
+        actions.setSubmitting(false);
+        actions.resetForm();
+    }
 
     dispatch({
         type: FETCH_TASK_CATEGORIES,

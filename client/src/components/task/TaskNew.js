@@ -9,6 +9,7 @@ import { BackButton, SubmitButtonSend } from '../elements/Button';
 import Checkbox from '../elements/Checkbox';
 import Select from '../elements/Select';
 import { ErrorSpan } from '../elements/Error';
+import modifyName from '../../utils/modifyName';
 
 const TaskNew = (props) => {
     const progressEl = useRef(null);
@@ -19,6 +20,12 @@ const TaskNew = (props) => {
 
     const handleSubmitForm = (formValues, actions) => {
         progressEl.current.classList.remove('hide');
+
+        for (let key in formValues) {
+            if (typeof formValues[key] === 'string') {
+                formValues[key] = modifyName(formValues[key]);    
+            }
+        }
 
         props.submitTask(formValues, progressEl, props.history, actions);
     };
