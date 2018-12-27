@@ -1,64 +1,72 @@
-import React from 'react';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
+import React, { Component } from 'react';
+import * as actions from '../../actions';
 import { connect } from 'react-redux';
 
-import * as actions from '../../actions';
+import validateName from '../../utils/validateName';
 import modifyName from '../../utils/modifyName';
-import { ErrorSpan } from '../elements/Error';
 
-const AddCategory = ({submitTaskCategory}) => {
-    const handleSubmitForm = ({name}, actions) => {
+class AddCategory extends Component {
+    constructor(props) {
+        super(props);
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.state = { name: '' };
+    }
+
+    handleChange(e) {
+        const name = e.target.name;
+        const val = e.target.value;
+
+        this.setState({
+            [name]: val
+        });
+
+        this.errorMessage(val);
+    }
+
+    errorMessage(v) {
+        const elem = document.querySelector('#cat_name_error');
+
+        if (validateName(v)) {
+            elem.classList.add('hide');
+            return;
+        }
+
+        elem.classList.remove('hide');
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+
+        let name = this.state['name'];
         name = modifyName(name);
-        submitTaskCategory({ name }, actions);
-    };
 
-    const CategoryNewSchema = Yup.object().shape({
-        name: Yup.string()
-            .trim()
-            .matches(/^[a-zA-Z ]+$/, {
-                message: 'Invalid Category Name',
-                excludeEmptyString: true
-            })
-            .required('Category Name Required!')
-    });
+        if (!validateName(name)) return;
 
-    const renderForm = ({handleChange, handleSubmit, isSubmitting, values, errors, touched}) => {
+        this.props.submitTaskCategory({ name });
+    }
+
+    render() {
         return (
-            <form onSubmit={handleSubmit}>
-                <div className="input-field col s7">
-                    <input value={values.name || ''} className="validate" id="cat_name_input" type="text" name="name" onChange={handleChange} />
-                    <label htmlFor="cat_name_input">Add Task Category</label>
-                    {errors.name && touched.name ? <ErrorSpan errorText={errors.name} /> : null}
-                </div>
+            <div className="section">
+                <div className="row">
+                    <div className="input-field col s7">
+                        <input className="validate" id="cat_name_input" type="text" name="name" onChange={this.handleChange} />
+                        <label htmlFor="cat_name_input">Add Task Category</label>
+                        <span id="cat_name_error" className="red-text hide">Not Valid Name</span>
+                    </div>
 
-                <div className="col s5">
-                    <button 
-                        className="teal btn-floating btn-large right white-text" 
-                        disabled={isSubmitting}
-                        type="submit"
-                    >
-                        <i className="material-icons">add</i>
-                    </button>
+                    <div className="col s5">
+                        <button className="teal btn-floating btn-large right white-text" onClick={this.handleSubmit}>
+                            <i className="material-icons">add</i>
+                        </button>
+                    </div>
                 </div>
-            </form>
-        );
-    };
-
-    return (
-        <div className="section">
-            <div className="row">
-                <Formik
-                    initialValues={{name: ''}}
-                    validationSchema={CategoryNewSchema}
-                    onSubmit={handleSubmitForm}
-                    render={renderForm}
-                >
-                </Formik>
             </div>
-        </div>
-    );
-    
-};
+        );
+    }
+}
 
 export default connect(null, actions)(AddCategory);
