@@ -152,8 +152,10 @@ module.exports = app => {
         });
 
         try {
-            await task.save();
-            res.send(await getTaskList(req.user.id));
+            const createdTask = await task.save();
+            const list = await getTaskList(req.user.id);
+            
+            res.send({createdTask, list});
         } catch (err) {
             res.status(422);
         }
