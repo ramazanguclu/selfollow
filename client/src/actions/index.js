@@ -101,13 +101,8 @@ export const fetchTaskCategories = () => async (dispatch) => {
     });
 };
 
-export const submitTaskCategory = (category, actions) => async (dispatch) => {
+export const submitTaskCategory = (category) => async (dispatch) => {
     const res = await axios.post('/api/task/categories/new', category);
-
-    if (res.status === 200 && res.statusText === 'OK') { 
-        actions.setSubmitting(false);
-        actions.resetForm();
-    }
 
     dispatch({
         type: FETCH_TASK_CATEGORIES,
@@ -135,20 +130,19 @@ export const deleteTask = (_task, history) => async (dispatch) => {
     });
 };
 
-export const submitTask = (task, progressEl, history, actions) => async (dispatch) => {
+export const submitTask = (task, button, history) => async (dispatch) => {
     const res = await axios.post('/api/task/new', task);
-    
-    if (res.status === 200 && res.statusText === 'OK') {
-        progressEl.current.classList.add('hide');
-        actions.setSubmitting(false);
-        actions.resetForm();
-    }
 
-    history.push(`/task/view/${res.data.createdTask._id}`);
+    if (res.status === 200 && res.statusText === 'OK') {
+        button.classList.remove('disabled');
+        document.querySelector('.progress').classList.add('hide');
+
+        setTimeout(() => { history.push('/'); }, 1 * 1000);
+    }
 
     dispatch({
         type: FETCH_TASKS,
-        payload: res.data.list.reverse()
+        payload: res.data.reverse()
     });
 };
 
