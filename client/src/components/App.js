@@ -23,7 +23,6 @@ import NotFound from './NotFound';
 import Restricted from './middlewares/Restricted';
 
 import M from 'materialize-css/dist/js/materialize.min.js';
-import '../styles/custom.css';
 
 class App extends Component {
     constructor(props) {
