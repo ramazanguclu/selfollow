@@ -1,131 +1,124 @@
-import React, { useRef, useEffect } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-
 import * as actions from '../../actions';
+import M from 'materialize-css/dist/js/materialize.min.js';
+
+import modifyName from '../../utils/modifyName';
+import taskFormField from './taskFormField';
 import { BackButton, SubmitButtonSend } from '../elements/Button';
 import Checkbox from '../elements/Checkbox';
 import Select from '../elements/Select';
-import { ErrorSpan } from '../elements/Error';
-import modifyName from '../../utils/modifyName';
 
-const TaskNew = (props) => {
-    const progressEl = useRef(null);
+class TaskNew extends Component {
+    constructor(props) {
+        super(props);
 
-    useEffect(() => {
-        props.fetchTaskCategories();
-    }, []);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleBack = this.handleBack.bind(this);
 
-    const handleSubmitForm = (formValues, actions) => {
-        progressEl.current.classList.remove('hide');
+        this.state = {};
+    }
 
-        for (let key in formValues) {
-            if (typeof formValues[key] === 'string') {
-                formValues[key] = modifyName(formValues[key]);    
-            }
-        }
+    componentWillMount() {
+        this.props.fetchTaskCategories();
+    }
 
-        props.submitTask(formValues, progressEl, props.history, actions);
-    };
+    componentDidMount() {
+        M.AutoInit();
+    }
 
-    const handleBack = e => {
-        e.preventDefault();
-        props.history.goBack();
-    };
+    componentDidUpdate() {
+        M.AutoInit();
+    }
 
-    const TaskNewSchema = Yup.object().shape({
-        name: Yup.string().trim().required('Name Required!'),
-        description: Yup.string().trim().required('Description Required!'),
-        _category: Yup.string().required('Category Required!')
-    });
-
-    const renderLoading = () => {
+    renderLoading() {
         return (
             <div className="col s12">
-                <div ref={progressEl} className="progress hide">
+                <div className="progress hide">
                     <div className="indeterminate"></div>
                 </div>
             </div>
         );
-    };
+    }
 
-    const renderForm = propsForm => {
-        const {errors, touched, handleSubmit, isSubmitting, handleChange, values} = propsForm;
-        
+    handleSubmit(e) {
+        e.preventDefault();
+        e.target.classList.add('disabled');
+        document.querySelector('.progress').classList.remove('hide');
+
+        this.props.submitTask(this.state, e.target, this.props.history);
+    }
+
+    error() {
+        const button = document.querySelector('button[type=submit]');
+
+        for (const v of taskFormField) {
+            const val = this.state[v.key];
+
+            if (!val) {
+                button.classList.add('disabled');
+                break;
+            } else {
+                button.classList.remove('disabled');
+            }
+        }
+    }
+
+    handleChange(e) {
+        const val = e.target.type === 'checkbox' ? e.target.checked : modifyName(e.target.value);
+        this.setState({
+            [e.target.name]: val
+        }, this.error);
+    }
+
+    handleBack(e) {
+        e.preventDefault();
+        this.props.history.goBack();
+    }
+
+    renderForm() {
         return (
-            <form onSubmit={handleSubmit}>
-                <div className="input-field col s12">
-                    <input 
-                        value={values.name || ''}
-                        className="validate" 
-                        type="text" 
-                        id="task_name" 
-                        name="name" 
-                        onChange={handleChange}
-                    />
-                    <label htmlFor="task_name">Task Name</label>
-                    {errors.name && touched.name ? <ErrorSpan errorText={errors.name} /> : null}
-                </div>
-
-                <div className="input-field col s12">
-                    <textarea
-                        value={values.description || ''} 
-                        id="task_desc" 
-                        className="materialize-textarea" 
-                        name="description" 
-                        onChange={handleChange}>
-                    </textarea>
-                    <label htmlFor="task_desc">Task Description</label>
-                    {errors.description && touched.description ? <ErrorSpan errorText={errors.description} /> : null}
-                </div>
-
-                <Select 
-                    name={'_category'} 
-                    onChange={handleChange} 
-                    label={'Categories'} 
-                    options={props.taskCategories}
-                    defaultOptionLabel={'Choose Task Category'}
-                    hasError={errors._category && touched._category}
-                    errorText={errors._category}
-                    value={values._category || ''}
-                />
-
-                <Checkbox 
-                    name={'isFavorite'} 
-                    onChange={handleChange} 
-                    label={'Is Favorite'} 
-                />
-
-                <div className="input-field col s12 row margin-top-10">
-                    <BackButton label={'Back'} onClick={handleBack} />
-                    <SubmitButtonSend label={'Submit'} disabled={isSubmitting} />
-                </div>
-
-                {renderLoading()}            
-            </form>
-        );
-    };
-
-    
-    return (
-        <div className="section">
             <div className="row">
-                <Formik
-                    initialValues={{name: '', description:'', _category:''}}
-                    validationSchema={TaskNewSchema}
-                    onSubmit={handleSubmitForm}
-                    render={renderForm}
-                >
-                </Formik>
-            </div>
-        </div>
-    );
-};
+                <form className="col s12">
 
-const mapStateToProps = ({ taskCategories }) => {
+                    <div className="input-field col s12">
+                        <input className="validate" type="text" id="task_name" name="name" onChange={this.handleChange} />
+                        <label htmlFor="task_name">Task Name</label>
+                    </div>
+
+                    <div className="input-field col s12">
+                        <textarea id="task_desc" className="materialize-textarea" name="description" onChange={this.handleChange}></textarea>
+                        <label htmlFor="task_desc">Task Description</label>
+                    </div>
+
+                    <Select name={'_category'} onChange={this.handleChange} label={'Categories'} options={this.props.taskCategories} defaultOptionLabel={'Choose Task Category'} />
+
+                    <Checkbox name={'isFavorite'} onChange={this.handleChange} label={'Is Favorite'} />
+
+                    <div className="input-field col s12 row margin-top-10">
+                        <BackButton label={'Back'} onClick={this.handleBack} />
+                        <SubmitButtonSend label={'Submit'} onClick={this.handleSubmit} />
+                    </div>
+
+                    {this.renderLoading()}
+                </form>
+            </div>
+        );
+    }
+
+    render() {
+        return (
+            <div className="section">
+                {this.renderForm()}
+            </div>
+        );
+    }
+}
+
+function mapStateToProps({ taskCategories }) {
     return { taskCategories };
-};
+}
 
 export default connect(mapStateToProps, actions)(withRouter(TaskNew));
