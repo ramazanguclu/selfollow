@@ -1,4 +1,3 @@
 export default (name = '') => {
-    return name.replace(/  +/g, ' ').trim();
+    return name.replace(/  +/g, '').trim();
 };
-
