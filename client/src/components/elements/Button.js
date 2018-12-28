@@ -18,9 +18,14 @@ export const SubmitButtonDone = ({ label, onClick }) => {
     );
 };
 
-export const SubmitButtonSend = ({ label, onClick }) => {
+export const SubmitButtonSend = ({ label, onClick, disabled }) => {
     return (
-        <button className="btn waves-effect waves-light right col s12 m5 l3 disabled" type="submit" onClick={onClick}>
+        <button 
+            className="btn waves-effect waves-light right col s12 m5 l3" 
+            type="submit" 
+            onClick={onClick}
+            disabled={disabled}
+        >
             {label}
             <i className="material-icons right">send</i>
         </button>
