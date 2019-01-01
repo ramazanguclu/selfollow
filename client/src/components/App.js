@@ -3,11 +3,6 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 
-import Dictionary from './dictionary/Dictionary';
-import DictionaryWords from './dictionary/DictionaryWords';
-import WordNew from './dictionary/word/WordNew';
-import WordUpdate from './dictionary/word/WordUpdate';
-
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
@@ -56,11 +51,6 @@ class App extends Component {
                             <Route exact path="/task/statistics" component={Restricted(Statistics, id)} />
                             <Route exact path="/task/inprogress" component={Restricted(InProgressTasks, id)} />
                             <Route exact path="/task/favorites" component={Restricted(FavoritesTasks, id)} />
-
-                            <Route exact path="/dictionary" component={Restricted(Dictionary, id)} />
-                            <Route exact path="/dictionary/words/:groupName/:group_id" component={Restricted(DictionaryWords, id)} />
-                            <Route exact path="/dictionary/words/:groupName/:group_id/new" component={Restricted(WordNew, id)} />
-                            <Route exact path="/dictionary/words/:groupName/:group_id/update/:word_id" component={Restricted(WordUpdate, id)} />
 
                             <Route component={NotFound} />
                         </Switch>

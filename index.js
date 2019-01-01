@@ -7,8 +7,6 @@ const bodyParser = require('body-parser');
 
 //models
 require('./models/User');
-require('./models/dictionary/Word');
-require('./models/dictionary/WordGroup');
 require('./models/task/Task');
 require('./models/task/TaskCategory');
 require('./models/task/TaskLog');
@@ -38,7 +36,6 @@ app.use(passport.session());
 
 //routes
 require('./routes/authRoutes')(app);
-require('./routes/dictionaryRoutes')(app);
 require('./routes/taskRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
